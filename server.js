@@ -22,25 +22,25 @@ const https = require('https');
 const app = express();
 
 //views
-// app.set('views', 'views');
-// app.set('view engine', 'ejs');
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.static('public'));
+app.set('views', 'views');
+app.set('view engine', 'ejs');
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 
 // attach login/logout/ /callback
-// const { auth } = require('express-openid-connect');
+const { auth } = require('express-openid-connect');
 
-// const config = {
-//     authRequired: false,
-//     auth0Logout: true,
-//     secret: process.env.SECRET,
-//     baseURL: process.env.BASE_URL ,
-//     clientID: process.env.CLIENT_ID,
-//     issuerBaseURL: process.env.ISSUER_BASE_URL
-//   };
+const config = {
+    authRequired: false,
+    auth0Logout: true,
+    secret: process.env.SECRET,
+    baseURL: process.env.BASE_URL ,
+    clientID: process.env.CLIENT_ID,
+    issuerBaseURL: process.env.ISSUER_BASE_URL
+  };
   
-// app.use(auth(config));
+app.use(auth(config));
 
 // logger
 app.use(logger('dev'));

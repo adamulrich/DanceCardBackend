@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="base.css" >
+    <title><%= title %></title>
+</head>
+<body>
+    <header>
+    <h1><%= title %></h1>
+    <nav>
+        <ul>
+            <li><a href='/login'>Login</a></li>
+            <li><a href='/logout'>Logout</a></li>
+            <li><a href='/api-docs'>Test the Dance Card API</a></li>
+        </ul>
+    </nav>
+    </header>
+    <section class="profile">
+        <img src="<%= image %>">
+        <h2><%=name%></h2>
+        <h3><%=user_id%></h3>
+    </section>
+    
+</body>
+</html>
