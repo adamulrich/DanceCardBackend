@@ -14,6 +14,23 @@ const logger = require('morgan');
 
 // swagger
 // let swaggerSpec = require('./swagger-output.json');
+const swaggerUI = require("swagger-ui-express");
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerSpec = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Node MongoDB API",
+      version: "1.0.0"
+    },
+    servers: [
+      {
+        url: "http://localhost:9000"
+      }
+    ]
+  },
+  apis: [`${path.join(__dirname, "./routes/*.js")}`]
+}
 
 //express
 const express = require('express');
@@ -51,6 +68,7 @@ app.use(express.json());
 
 // swagger
 // app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerJSDoc(swaggerSpec)))
 
 const router = require('./routes');
 
