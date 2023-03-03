@@ -1,4 +1,3 @@
-const { truncate } = require('fs');
 const mongoose = require('mongoose');
 
 const regionSchema = new mongoose.Schema(
@@ -15,23 +14,6 @@ const regionSchema = new mongoose.Schema(
         signingPassword: {
             type: String, required: true
         },
-        stakes: [{
-            name: {
-                type: String, required: true
-            },
-            stakeId: {
-                type: Number
-            },
-            wards: [{
-                name: {
-                    type: String, required: true
-                },
-                wardId: {
-                        type: Number
-                    }
-            }]
-        }]
-
     });
 
 module.exports = mongoose.model("region", regionSchema, 'regions');
