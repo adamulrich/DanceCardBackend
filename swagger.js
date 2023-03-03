@@ -26,10 +26,6 @@
  */
 
 
-
-
-
-
 /**
  * @swagger
  * /api/users:
