@@ -1,4 +1,5 @@
-const app = require("../server").app;
+
+const server = require("../server").server;
 // const addHeroExample = require('../models/heroes').addHeroExample;
 
 const request = require("supertest");
@@ -12,9 +13,11 @@ describe("Sanity test", () => {
 
 describe("login page test", function () {
 	test("200 code & html", async () => {
-		const res = await request(app).get("/");
-		console.log(res.text.substring(0, 14));
+		const res = await request(server).get("/");
 		expect(res.text.substring(0,15)).toEqual('<!DOCTYPE html>');
 		expect(res.statusCode).toEqual(200);
 	});
 });
+
+
+server.close();

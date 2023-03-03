@@ -66,7 +66,7 @@ app.use((req, res, next) => {
 })
 
 //start
-app.listen(port, async (res, req) => {
+const server = app.listen(port, async (res, req) => {
     
     console.log(`App listening at ${process.env.BASE_URL}`)
     try {
@@ -77,4 +77,4 @@ app.listen(port, async (res, req) => {
     }
 })
 
-module.exports = { app };
+module.exports = { app, server };
