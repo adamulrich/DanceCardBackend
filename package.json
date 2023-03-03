@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "npm install",
     "start": "node server.js",
     "dev": "nodemon server.js",
@@ -22,10 +22,12 @@
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "express-openid-connect": "^2.12.0",
+    "jest": "^29.4.3",
     "mongodb": "^4.13.0",
     "mongoose": "^6.9.0",
     "morgan": "^1.10.0",
     "node": "^18.13.0",
+    "supertest": "^6.3.3",
     "swagger-autogen": "^2.23.0",
     "swagger-ui-express": "^4.6.0"
   },
