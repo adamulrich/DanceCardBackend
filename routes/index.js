@@ -20,4 +20,12 @@ router.get('/', (req, res) => {
   }
 })
 
+// test route for testing function implementations.
+router.get('/test', async (req, res) => {
+    // #swagger.ignore = true
+    const id = await require('../models/stake').getNewStakeId();
+    res.status(200).send(`${id}`)
+})
+
+
 module.exports = router;

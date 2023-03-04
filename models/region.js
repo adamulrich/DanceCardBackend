@@ -16,4 +16,13 @@ const regionSchema = new mongoose.Schema(
         },
     });
 
-module.exports = mongoose.model("region", regionSchema, 'regions');
+const regionExample = {
+    name: "South Puget Sound", 
+    Standards: "TBD", 
+    regionId: 1,
+    signingPassword: "stroud"
+}
+
+const regionModel = mongoose.model("region", regionSchema, 'region');
+
+module.exports = {regionModel, regionExample};

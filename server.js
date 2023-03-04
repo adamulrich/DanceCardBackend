@@ -8,7 +8,7 @@ const cors = require('cors')
 const logger = require('morgan');
 
 // db models
-// const mongoose = require('./db/mongoose')
+const mongoose = require('./database/connect');
 // const m2s = require('mongoose-to-swagger');
 
 
@@ -70,8 +70,8 @@ const server = app.listen(port, async (res, req) => {
     
     console.log(`App listening at ${process.env.BASE_URL}`)
     try {
-        // const db = await mongoose.getDb();
-        // console.log("connected via mongoose to mongo db");
+        const db = await mongoose.getDb();
+        console.log("connected via mongoose to mongo db");
     } catch (error) {
         console.log(error);
     }

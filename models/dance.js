@@ -20,6 +20,8 @@ const danceschema = new mongoose.Schema(
         }
     });
 
-module.exports = mongoose.model("dance", danceschema, 'dances');
+danceModel = mongoose.model("dance", danceschema, 'dance');
+
+module.exports = { danceModel };
 
     
