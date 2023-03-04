@@ -8,15 +8,15 @@ const wardSchema = new mongoose.Schema(
         wardId: {
             type: Number
         },
-        StakeId: {
+        stakeId: {
             type: Number, required: true
         }
     });
 
 const wardExample = {
     name: "Pine Tree Ward",
-    WardId: 1,
-    StakeId: 1
+    wardId: 1,
+    stakeId: 1
 }
 
 async function getNewWardId() {

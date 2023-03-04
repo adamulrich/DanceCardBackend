@@ -5,7 +5,7 @@ const regionSchema = new mongoose.Schema(
         name: {
             type: String, required: true
         },
-        Standards: {
+        standards: {
             type: String, required: true
         },
         regionId: {
@@ -18,9 +18,9 @@ const regionSchema = new mongoose.Schema(
 
 const regionExample = {
     name: "South Puget Sound", 
-    Standards: "TBD", 
+    standards: "TBD", 
     regionId: 1,
-    signingPassword: "stroud"
+    signingPassword: "DanceMachine"
 }
 
 const regionModel = mongoose.model("region", regionSchema, 'region');
