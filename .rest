@@ -1,4 +1,7 @@
-@hostname = localhost:3000
+@hostname = localhost:5000
 
 ###
 GET http://{{hostname}}
+
+### test route
+GET http://{{hostname}}/test

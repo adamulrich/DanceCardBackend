@@ -1,4 +1,3 @@
-const { truncate } = require('fs');
 const mongoose = require('mongoose');
 
 const regionSchema = new mongoose.Schema(
@@ -6,7 +5,7 @@ const regionSchema = new mongoose.Schema(
         name: {
             type: String, required: true
         },
-        Standards: {
+        standards: {
             type: String, required: true
         },
         regionId: {
@@ -15,23 +14,15 @@ const regionSchema = new mongoose.Schema(
         signingPassword: {
             type: String, required: true
         },
-        stakes: [{
-            name: {
-                type: String, required: true
-            },
-            stakeId: {
-                type: Number
-            },
-            wards: [{
-                name: {
-                    type: String, required: true
-                },
-                wardId: {
-                        type: Number
-                    }
-            }]
-        }]
-
     });
 
-module.exports = mongoose.model("region", regionSchema, 'regions');
+const regionExample = {
+    name: "South Puget Sound", 
+    standards: "TBD", 
+    regionId: 1,
+    signingPassword: "DanceMachine"
+}
+
+const regionModel = mongoose.model("region", regionSchema, 'region');
+
+module.exports = {regionModel, regionExample};

@@ -10,7 +10,7 @@ let db = null;
 const connectDB = process.env.MONGO_URI;
 
 
-async function getDB() {
+async function getDb() {
     if (db == null) {
         try {
             db = await mongoose.connect(connectDB);
@@ -24,4 +24,4 @@ async function getDB() {
     return db
 }
 
-module.exports = {getDB}
+module.exports = {getDb}

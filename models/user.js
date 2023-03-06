@@ -37,4 +37,5 @@ const userSchema = new mongoose.Schema(
         }
     });
 
-module.exports = mongoose.model("dance", userSchema, 'dances');
+userModel = mongoose.model("user", userSchema, 'user')
+module.exports = {userModel}
