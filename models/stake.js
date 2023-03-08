@@ -23,6 +23,8 @@ async function getNewStakeId() {
     returnId = 1;
     try {
         const newId = await stakeModel.find({}).sort({ stakeId: -1 }).limit(1);
+        console.log('here');
+        console.log(newId);
         returnId = newId[0]['stakeId'] + 1;
     } catch {
         return returnId;    

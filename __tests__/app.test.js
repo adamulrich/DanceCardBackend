@@ -97,7 +97,7 @@ describe("test ward model and example", function () {
 		// update name and validate
 		newWard.name = "Scenic Hill Ward";
 
-		let result = await wardModel.updateOne({ wardId: newWardId }, newWard, { runValidators: true});
+		let result = await wardModel.updateOne({ wardId: newWardId }, newWard, { runValidators: true });
 		expect(result.modifiedCount).toEqual(1);
 
 		mongoward = await wardModel.findOne({ 'wardId': newWardId });
@@ -112,4 +112,25 @@ describe("test ward model and example", function () {
 		mongoward = await wardModel.findOne({ 'wardId': newWardId });
 		expect(mongoward).toEqual(null);
 	})
-});
+})
+
+const userModel = require('../models/user').userModel;
+const userExample = require('../models/user').userExample;
+
+describe("test user model and example", function () {
+	test("read user", async () => {
+
+		const newUser = userExample
+		
+
+		// create new ward object
+		let mongoUser = await userModel.findOne({ 'email': newUser.email });
+
+		expect(mongoUser.name).toEqual(newUser.name);
+		expect(mongowUser.parentEmail).toEqual(newUser.parentEmail);
+		expect(mongoUser.stakeId).toEqual(newWard.stakeId);
+		expect(mongoUser.stakeName).not.toBe('');
+
+	})
+
+})

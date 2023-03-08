@@ -53,9 +53,11 @@ app.use(express.json());
 // app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 // app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerJSDoc(swaggerSpec)))
 
-const router = require('./routes');
+// const router = require('./routes');
 
-app.use('/', router);
+
+app.use('/', require('./routes/index'));
+app.use("/", require('./routes/user'))
 
 app.use((req, res, next) => {
     res.setHeader('Content-Type', 'application/json');
