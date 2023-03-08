@@ -120,15 +120,16 @@ const userExample = require('../models/user').userExample;
 describe("test user model and example", function () {
 	test("read user", async () => {
 
-		const newUser = userExample
+		const newUser = userExample;
 		
-
 		// create new ward object
 		let mongoUser = await userModel.findOne({ 'email': newUser.email });
+		console.log(newUser);
+		console.log(mongoUser);
 
 		expect(mongoUser.name).toEqual(newUser.name);
-		expect(mongowUser.parentEmail).toEqual(newUser.parentEmail);
-		expect(mongoUser.stakeId).toEqual(newWard.stakeId);
+		expect(mongoUser.parentEmail).toEqual(newUser.parentEmail);
+		expect(mongoUser.stakeId).toEqual(newUser.stakeId);
 		expect(mongoUser.stakeName).not.toBe('');
 
 	})

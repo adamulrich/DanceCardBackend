@@ -5,11 +5,11 @@ const userSchema = new mongoose.Schema(
         name: {
             type: String, required: true
         },
-        stakeId: {
-            type: Number, required: true
+        email: {
+            type: String, required: true
         },
-        wardId: {
-            type: Number, required: true
+        phone: {
+            type: Number
         },
         parentName: {
             type: String
@@ -17,17 +17,17 @@ const userSchema = new mongoose.Schema(
         parentPhone: {
             type: Number
         },
+        wardId: {
+            type: Number, required: true
+        },
+        stakeId: {
+            type: Number, required: true
+        },
         cardIsSigned: {
             type: Boolean, required: true
         },
         expirationDate: {
             type: Date, required: true
-        },
-        email: {
-            type: String, required: true
-        },
-        phone: {
-            type: Number
         },
         regionAdmin: {
             type: Boolean, required: true
@@ -38,9 +38,6 @@ const userSchema = new mongoose.Schema(
     },
     {
         toObject: {virtuals:true},
-        // use if your results might be retrieved as JSON
-        // see http://stackoverflow.com/q/13133911/488666
-        //toJSON: {virtuals:true} 
     }
 );
 
@@ -58,5 +55,19 @@ userSchema.virtual('stake', {
     justOne: true // for many-to-1 relationships
 });
 
+const userExample = {
+    name: "Sara Johnson",
+    stakeId: 2,
+    wardId: 1,
+    parentName: "Bobby Johnson",
+    parentPhone: "123-456-7890",
+    cardIsSigned: false,
+    expirationDate: "05/05/2024",
+    email: "sj@gmail.com",
+    phone: "123-456-0000",
+    regionAdmin: false,
+    regionId: 1
+}
+
 userModel = mongoose.model("user", userSchema, 'user')
-module.exports = {userModel}
+module.exports = {userModel, userExample}
