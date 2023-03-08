@@ -43,7 +43,7 @@ const config = {
     clientID: process.env.CLIENT_ID,
     issuerBaseURL: process.env.ISSUER_BASE_URL
   };
-  
+
 app.use(auth(config));
 
 // logger
