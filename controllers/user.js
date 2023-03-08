@@ -37,10 +37,10 @@ async function getUser(req, res) {
             returnUser.parentName = result.parentName;
             returnUser.parentPhone = result.parentPhone;
             returnUser.stakeId = result.stakeId;
-            returnUser.stake = result.stake.name;
+            returnUser.stakeName = result.stake.name;
             returnUser.wardId = result.wardId;
-            returnUser.ward = result.ward.name;
-            res.status(200).send(returnUser);
+            returnUser.wardName = result.ward.name;
+            res.status(200).json(returnUser);
         }
     } catch (error) {
         setHeaders(res, contentText);

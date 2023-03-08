@@ -3,7 +3,7 @@ const User = require('../controllers/user');
 
 router.get('/user/:email', async (req, res) => {
     console.log('here');
-    if (true) {
+    if (req.oidc.isAuthenticated() || process.env.ENV_DEV) {
         // #swagger.summary = 'returns all the hero names and their ids'
         // #swagger.description = 'returns all the hero names and their ids'
         /* #swagger.responses[200] = {

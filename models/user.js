@@ -9,13 +9,13 @@ const userSchema = new mongoose.Schema(
             type: String, required: true
         },
         phone: {
-            type: Number
+            type: String
         },
         parentName: {
             type: String
         },
         parentPhone: {
-            type: Number
+            type: String
         },
         wardId: {
             type: Number, required: true
