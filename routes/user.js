@@ -8,7 +8,7 @@ router.get('/user/:email', async (req, res) => {
         // #swagger.description = 'returns all the hero names and their ids'
         /* #swagger.responses[200] = {
             description: 'user',
-            schema: [{ $ref: '#/definitions/User' }]
+            schema: [{ $ref: '#/definitions/user' }]
              }
         }
         */
