@@ -3,5 +3,9 @@
 ###
 GET http://{{hostname}}
 
-### test route
+### user route
+GET http://{{hostname}}/user/sj@gmail.com 
+
+###
 GET http://{{hostname}}/test
+

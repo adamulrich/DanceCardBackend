@@ -6,6 +6,7 @@ const server = require("../server").server;
 
 const request = require("supertest");
 const exp = require("constants");
+
 const { getNewStakeId } = require("../models/stake");
 
 describe("Sanity test", () => {
@@ -70,6 +71,7 @@ describe("test stake model and example", function () {
 	})
 });
 
+server.close();
 
 const wardModel = require('../models/ward').wardModel;
 const wardExample = require('../models/ward').wardExample;
@@ -97,7 +99,7 @@ describe("test ward model and example", function () {
 		// update name and validate
 		newWard.name = "Scenic Hill Ward";
 
-		let result = await wardModel.updateOne({ wardId: newWardId }, newWard, { runValidators: true});
+		let result = await wardModel.updateOne({ wardId: newWardId }, newWard, { runValidators: true });
 		expect(result.modifiedCount).toEqual(1);
 
 		mongoward = await wardModel.findOne({ 'wardId': newWardId });
@@ -112,4 +114,53 @@ describe("test ward model and example", function () {
 		mongoward = await wardModel.findOne({ 'wardId': newWardId });
 		expect(mongoward).toEqual(null);
 	})
-});
+})
+
+server.close();
+const userModel = require('../models/user').userModel;
+const userExample = require('../models/user').userExample;
+
+describe("test user model and example", function () {
+	test("read user", async () => {
+
+		const newUser = userExample;
+		
+		// create new ward object
+		let mongoUser = await userModel.findOne({ 'email': newUser.email });
+
+		expect(mongoUser.name).toEqual(newUser.name);
+		expect(mongoUser.parentEmail).toEqual(newUser.parentEmail);
+		expect(mongoUser.stakeId).toEqual(newUser.stakeId);
+		expect(mongoUser.stakeName).not.toBe('');
+
+	})
+})
+
+server.close();
+
+describe("User route test", function () {
+	test("get user", async () => {
+		const newUser = userExample;
+		const stakeResult = await stakeModel.findOne({ stakeId: newUser.stakeId });
+		const wardResult = await wardModel.findOne({ wardId: newUser.wardId });
+		console.log(stakeResult);
+		const res = await request(server)
+			.get(`/user/${newUser.email}`);
+		
+		console.log(res.body);
+		expect(res.statusCode).toEqual(200)
+		expect(res.body.name).toEqual(newUser.name);
+		expect(res.body.stakeName).toEqual(stakeResult.name);
+		expect(res.body.wardName).toEqual(wardResult.name);
+		expect(res.body.phone).toEqual(newUser.phone);
+		expect(res.body.email).toEqual(newUser.email);
+		expect(res.body.parentPhone).toEqual(newUser.parentPhone);
+		expect(res.body.parentName).toEqual(newUser.parentName);
+		expect(new Date(res.body.expirationDate).toDateString()).toEqual(new Date(newUser.expirationDate).toDateString());
+		expect(res.body.cardIsSigned).toEqual(newUser.cardIsSigned);
+		expect(res.body.regionId).toEqual(newUser.regionId);
+		expect(res.body.regionAdmin).toEqual(newUser.regionAdmin);
+	});
+})
+
+server.close();
