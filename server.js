@@ -9,11 +9,15 @@ const logger = require('morgan');
 
 // db models
 const mongoose = require('./database/connect');
-// const m2s = require('mongoose-to-swagger');
+const m2s = require('mongoose-to-swagger');
+const userSchema = m2s(require("./models/user").userModel);
 
 
 // swagger
-// let swaggerSpec = require('./swagger-output.json');
+let swaggerSpec = require('./swagger-output.json');
+swaggerSpec.definitions = {};
+swaggerSpec.definitions.user = userSchema;
+swaggerSpec.definitions.user.example = require("./models/user").userExample;
 
 //express
 const express = require('express');
@@ -50,8 +54,8 @@ app.use(cors());
 app.use(express.json());
 
 // swagger
-// app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
-// app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerJSDoc(swaggerSpec)))
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
 
 // const router = require('./routes');
 

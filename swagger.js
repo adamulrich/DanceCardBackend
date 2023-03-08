@@ -6,8 +6,8 @@ const doc = {
     description: 'Description',
   },
   host: '',
-  schemes: ['http'],
-};
+  schemes: ['http']
+  };
 
 const outputFile = './swagger-output.json';
 const endpointsFiles = ['./server.js'];
