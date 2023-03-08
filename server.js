@@ -8,29 +8,12 @@ const cors = require('cors')
 const logger = require('morgan');
 
 // db models
-// const mongoose = require('./db/mongoose')
+const mongoose = require('./database/connect');
 // const m2s = require('mongoose-to-swagger');
 
 
 // swagger
 // let swaggerSpec = require('./swagger-output.json');
-const swaggerUI = require("swagger-ui-express");
-const swaggerJSDoc = require("swagger-jsdoc");
-const swaggerSpec = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Node MongoDB API",
-      version: "1.0.0"
-    },
-    servers: [
-      {
-        url: "http://localhost:9000"
-      }
-    ]
-  },
-  apis: [`${path.join(__dirname, "./routes/*.js")}`]
-}
 
 //express
 const express = require('express');
@@ -68,11 +51,13 @@ app.use(express.json());
 
 // swagger
 // app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
-app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerJSDoc(swaggerSpec)))
+// app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerJSDoc(swaggerSpec)))
 
-const router = require('./routes');
+// const router = require('./routes');
 
-app.use('/', router);
+
+app.use('/', require('./routes/index'));
+app.use("/", require('./routes/user'))
 
 app.use((req, res, next) => {
     res.setHeader('Content-Type', 'application/json');
@@ -83,15 +68,15 @@ app.use((req, res, next) => {
 })
 
 //start
-app.listen(port, async (res, req) => {
+const server = app.listen(port, async (res, req) => {
     
     console.log(`App listening at ${process.env.BASE_URL}`)
     try {
-        // const db = await mongoose.getDb();
-        // console.log("connected via mongoose to mongo db");
+        const db = await mongoose.getDb();
+        console.log("connected via mongoose to mongo db");
     } catch (error) {
         console.log(error);
     }
 })
 
-module.exports = { app };
+module.exports = { app, server };
