@@ -46,8 +46,48 @@ async function getUser(req, res) {
         setHeaders(res, contentText);
         res.status(500).send(`${error}`);
     }
-    
 }
+
+async function createUser(req, res) {
+    try {
+        // if (await getPrivData(req.oidc.user.sub,'create')) {
+
+            //get new user data from request object
+            try {
+                const newUser = new user(req.body);
+
+                // create user in database
+                try {
+                    await newUser.save();
+
+                // failed to save
+                } catch (error) {
+                    setHeaders(res, contentText);
+                    res.status(422).send(`Bad data. ${error}`);
+                    return;
+                }
+            
+                // success
+                setHeaders(res, contentText);
+                res.status(201).send(`New User: ${newUser['name']}, email: ${newUser['email']}`);
+
+            // catch unknown errors
+            } catch (error) {
+                setHeaders(res, contentText);
+                res.status(400).send(`${error}`);
+                return;
+            }
+        // failed authorization for user
+        // } else {
+        //     setHeaders(res, contentText);
+        //     res.status(403).send("Incorrect permissions.");    
+        // }
+    } catch (error) {
+        res.status(500).send(`${error}`);
+    }
+}
+
+
 
 // sets the headers for the response
 function setHeaders(res, contentType) {
@@ -60,4 +100,4 @@ function setHeaders(res, contentType) {
 }
 
 
-module.exports = { getUser };
+module.exports = { getUser, createUser } //, updateUser, deleteUser };

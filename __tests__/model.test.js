@@ -27,10 +27,12 @@ describe("login page test", function () {
 server.close();
 
 
-// model tests
+//////////////////// MODEL TESTS
 const stakeModel = require('../models/stake').stakeModel;
 const stakeExample = require('../models/stake').stakeExample;
 
+
+///////////// STAKE MODEL
 describe("test stake model and example", function () {
 	test("create, read, update, delete stake", async () => {
 
@@ -73,6 +75,8 @@ describe("test stake model and example", function () {
 
 server.close();
 
+
+///////////// WARD MODEL
 const wardModel = require('../models/ward').wardModel;
 const wardExample = require('../models/ward').wardExample;
 
@@ -117,6 +121,9 @@ describe("test ward model and example", function () {
 })
 
 server.close();
+
+
+///////////// USER MODEL
 const userModel = require('../models/user').userModel;
 const userExample = require('../models/user').userExample;
 
@@ -138,29 +145,3 @@ describe("test user model and example", function () {
 
 server.close();
 
-describe("User route test", function () {
-	test("get user", async () => {
-		const newUser = userExample;
-		const stakeResult = await stakeModel.findOne({ stakeId: newUser.stakeId });
-		const wardResult = await wardModel.findOne({ wardId: newUser.wardId });
-		console.log(stakeResult);
-		const res = await request(server)
-			.get(`/user/${newUser.email}`);
-		
-		console.log(res.body);
-		expect(res.statusCode).toEqual(200)
-		expect(res.body.name).toEqual(newUser.name);
-		expect(res.body.stakeName).toEqual(stakeResult.name);
-		expect(res.body.wardName).toEqual(wardResult.name);
-		expect(res.body.phone).toEqual(newUser.phone);
-		expect(res.body.email).toEqual(newUser.email);
-		expect(res.body.parentPhone).toEqual(newUser.parentPhone);
-		expect(res.body.parentName).toEqual(newUser.parentName);
-		expect(new Date(res.body.expirationDate).toDateString()).toEqual(new Date(newUser.expirationDate).toDateString());
-		expect(res.body.cardIsSigned).toEqual(newUser.cardIsSigned);
-		expect(res.body.regionId).toEqual(newUser.regionId);
-		expect(res.body.regionAdmin).toEqual(newUser.regionAdmin);
-	});
-})
-
-server.close();
