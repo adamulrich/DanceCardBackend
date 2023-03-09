@@ -1,3 +1,6 @@
+// set this so that tests can test.
+process.env.ENV_DEV = true;
+
 const stake = require('../models/stake');
 const ward = require('../models/ward');
 
@@ -144,4 +147,3 @@ describe("test user model and example", function () {
 })
 
 server.close();
-

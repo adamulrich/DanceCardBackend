@@ -1,3 +1,5 @@
+// set this so that tests can test.
+process.env.ENV_DEV = true;
 
 const stakeModel = require('../models/stake').stakeModel;
 const wardModel = require('../models/ward').wardModel;
@@ -37,7 +39,7 @@ describe("User route test", function () {
 
 		const resCorrect = await request(server)
 			.post('/user')
-			.send(newUser);
+			.send(newUser)
 
 		expect(resCorrect.statusCode).toEqual(201)
 
@@ -61,4 +63,3 @@ describe("User route test", function () {
 })
 
 server.close();
-

@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
             type: Boolean, required: true
         },
         expirationDate: {
-            type: Date, required: true
+            type: Date
         },
         regionAdmin: {
             type: Boolean, required: true
