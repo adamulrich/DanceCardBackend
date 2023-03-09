@@ -65,9 +65,7 @@ router.put("/user/:email", (req, res) => {
 
 router.delete("/user/:email", (req, res) => {
     if (req.oidc.isAuthenticated() || process.env.ENV_DEV) {
-    // #swagger.summary = 'deletes a user from the db based on ID.'
-    // #swagger.description = 'deletes a user from the db based on ID.'
-    // #swagger.parameters['id'] = { description: 'user Id' }
+    // #swagger.summary = 'deletes a user from the db based on email.'
     /* #swagger.responses[200] = {
             description: 'OK',
              }

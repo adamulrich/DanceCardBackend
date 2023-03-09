@@ -64,25 +64,31 @@
           "204": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "delete": {
-        "summary": "deletes a user from the db based on ID.",
-        "description": "deletes a user from the db based on ID.",
+        "summary": "deletes a user from the db based on email.",
+        "description": "",
         "parameters": [
           {
             "name": "email",
             "in": "path",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "id",
-            "description": "user Id",
-            "in": "query",
             "type": "string"
           }
         ],
@@ -92,6 +98,12 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -119,6 +131,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "422": {
             "description": "Unprocessable Entity"

@@ -9,15 +9,14 @@ const stake = require('../models/stake').stakeModel;
 const ward = require('../models/ward').wardModel
 
 async function getUser(req, res) {
+    
     const userEmail = req.params.email;
 
     try {
         //get privs and check to see if they are an admin, or the user, or this is a test
         let userPrivs = { regionId: 0, regionAdmin: false};
         let userSub = '';
-        console.log(req.oidc.isAuthenticated());
         if (req.oidc.isAuthenticated()) {
-            console.log(req.oidc.user.sub);
             userPrivs = await getPrivs(req.oidc.user.sub);
             userSub = req.oidc.user.sub;
         }
@@ -75,9 +74,7 @@ async function createUser(req, res) {
         // or this is a test
         let userPrivs = { regionId: 0, regionAdmin: false};
         let userSub = '';
-        console
         if (req.oidc.isAuthenticated()) {
-            console.log(`sub: ${req.oidc.user.sub}`);
             userPrivs = await getPrivs(req.oidc.user.sub);
             userSub = req.oidc.user.sub;
         }
@@ -122,16 +119,27 @@ async function createUser(req, res) {
 }
 
 
-async function UpdateUser(req, res) {
+async function updateUser(req, res) {
     try {
 
         // if they are an admin, or they are creating an account with the currently logged in user
-        if (await isAdmin(req.oidc.user.sub) || process.env.ENV_DEV) {
+        // or this is a test
+        let userPrivs = { regionId: 0, regionAdmin: false};
+        let userSub = '';
+        if (req.oidc.isAuthenticated()) {
+            userPrivs = await getPrivs(req.oidc.user.sub);
+            userSub = req.oidc.user.sub;
+        }
+
+        if (userSub == req.body.userSub ||
+            (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+            process.env.ENV_DEV) {
+
 
             //get new user data from request object
             try {
                 const userEmail = req.params.email;
-                const uupdatedUser = req.body;
+                const updatedUser = req.body;
                 let result = null;
 
                 // create user in database
@@ -150,12 +158,18 @@ async function UpdateUser(req, res) {
             
                 let statusCode = 0;
                 let modifiedCount = 0;
+                let matchedCount = 0;
                 if (result) {
-                    modifiedCount = result.modifiedCount
+                    modifiedCount = result.modifiedCount;
+                    matchedCount = result.matchedCount;
                 }
                 // if we don't have a result or the modifiedCount is 0 set the status code to 404
                 if (result === null || modifiedCount == 0 ) {
-                    statusCode = 404
+                    if (matchedCount == 0) {
+                        statusCode = 404;
+                    } else {
+                        statusCode = 417;
+                    }
                 } else {
                     statusCode = 200
                 }
@@ -177,6 +191,45 @@ async function UpdateUser(req, res) {
     }
 }
 
+
+async function deleteUser(req, res) {
+    
+    const userEmail = req.params.email;
+
+    try {
+        //get privs and check to see if they are an admin, or the user, or this is a test
+        let userPrivs = { regionId: 0, regionAdmin: false};
+        let userSub = '';
+        if (req.oidc.isAuthenticated()) {
+            userPrivs = await getPrivs(req.oidc.user.sub);
+            userSub = req.oidc.user.sub;
+        }
+        let result = {};
+        try {
+            //get user data from model
+            result = await user.deleteOne({ email: {$eq: userEmail}});
+            console.log(result);
+        } catch (error) {
+            setHeaders(res, contentText);
+            res.status(422).send(`Bad data. ${error}`);
+            return;
+        }
+        // if deletedCount is 0 set the status code to 404
+        let statusCode = 0;
+        if (result.deletedCount == 0) {
+            statusCode = 404
+        } else {
+            statusCode = 200
+        }
+        setHeaders(res, contentText);
+        res.status(statusCode).send(result);
+    }
+    catch (error) {
+        setHeaders(res, contentText);
+        res.status(500).send(`${error}`);
+    }
+    
+}
 
 
 // sets the headers for the response
@@ -208,4 +261,4 @@ async function getPrivs(userId) {
     }
 }
 
-module.exports = { getUser, createUser } //, updateUser, deleteUser };
+module.exports = { getUser, createUser, updateUser, deleteUser };
