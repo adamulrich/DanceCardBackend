@@ -1,18 +1,17 @@
 const router = require('express').Router();
-const User = require('../controllers/user');
+const user = require('../controllers/user');
 
 router.get('/user/:email', async (req, res) => {
-    console.log('here');
     if (req.oidc.isAuthenticated() || process.env.ENV_DEV) {
-        // #swagger.summary = 'returns all the hero names and their ids'
-        // #swagger.description = 'returns all the hero names and their ids'
+        // #swagger.summary = 'returns a users data'
+        // #swagger.description = ''
         /* #swagger.responses[200] = {
             description: 'user',
-            schema: [{ $ref: '#/definitions/user' }]
+            schema: { $ref: '#/definitions/user' }
              }
         }
         */
-       User.getUser(req, res);
+       user.getUser(req, res);
         
     } else {
         res.status(401).send("Not authenticated.");
@@ -20,9 +19,69 @@ router.get('/user/:email', async (req, res) => {
 }
 )
 
+router.post('/user', (req, res) => {
+    if (req.oidc.isAuthenticated() || process.env.ENV_DEV) {
+        // #swagger.summary = 'add a user to the db'
+        // #swagger.description = 'add a user to the db'
+        /* #swagger.responses[201] = {
+                description: 'OK'}
+                }
+        }
+        */
+        /*  #swagger.parameters['obj'] = {
+                in: 'body',
+                description: 'Add a user',
+                schema: { $ref: '#/definitions/user' }
+            } */
+            
+            user.createUser(req, res);
+    } else {
+        res.status(401).send("Not authenticated.");
+    }
+});
+
+
+router.put("/user/:email", (req, res) => {
+    if (req.oidc.isAuthenticated() || process.env.ENV_DEV)
+    {
+    // #swagger.summary = 'replaces a user in the db based on ID'
+    // #swagger.description = 'replaces a user in the db based on ID'
+    /* #swagger.responses[204] = {
+            description: 'OK',
+             }
+    }
+    */ 
+    /*  #swagger.parameters['obj'] = {
+                in: 'body',
+                description: 'Replace user info',
+                schema: { $ref: '#/definitions/user' }
+        } */
+
+        user.updateUser(req, res);
+    } else {
+        res.status(401).send("Not authenticated.");
+    }
+});
+
+router.delete("/user/:email", (req, res) => {
+    if (req.oidc.isAuthenticated() || process.env.ENV_DEV) {
+    // #swagger.summary = 'deletes a user from the db based on email.'
+    /* #swagger.responses[200] = {
+            description: 'OK',
+             }
+    }
+    */
+        user.deleteUser(req, res);
+    } else {
+        res.status(401).send("Not authenticated.");
+    }
+});
+
+
+
 // test route for testing function implementations.
 router.get('/test', async (req, res) => {
-    console.log('here');
+
     // #swagger.ignore = true
     const id = await require('../models/stake').getNewStakeId();
     res.status(200).send(`${id}`)

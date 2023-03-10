@@ -16,7 +16,7 @@ const userSchema = m2s(require("./models/user").userModel);
 // swagger
 let swaggerSpec = require('./swagger-output.json');
 swaggerSpec.definitions = {};
-swaggerSpec.definitions.user = userSchema;
+swaggerSpec.definitions.user = userSchema; 
 swaggerSpec.definitions.user.example = require("./models/user").userExample;
 
 //express
@@ -43,7 +43,7 @@ const config = {
     clientID: process.env.CLIENT_ID,
     issuerBaseURL: process.env.ISSUER_BASE_URL
   };
-  
+
 app.use(auth(config));
 
 // logger
@@ -76,11 +76,14 @@ app.use((req, res, next) => {
 
 //start
 const server = app.listen(port, async (res, req) => {
-    
-    console.log(`App listening at ${process.env.BASE_URL}`)
+    if (!process.env.JEST_WORKER_ID) {
+        console.log(`App listening at ${process.env.BASE_URL}`)
+    }
     try {
         const db = await mongoose.getDb();
-        console.log("connected via mongoose to mongo db");
+        if (!process.env.JEST_WORKER_ID) {
+            console.log("connected via mongoose to mongo db");
+        }
     } catch (error) {
         console.log(error);
     }
