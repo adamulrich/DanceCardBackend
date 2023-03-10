@@ -11,7 +11,7 @@
     "http"
   ],
   "paths": {
-    "/api/stake": {
+    "/stake": {
       "post": {
         "description": "",
         "parameters": [],
@@ -43,7 +43,7 @@
         }
       }
     },
-    "/api/stake/{id}": {
+    "/stake/{id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -129,7 +129,7 @@
         }
       }
     },
-    "/api/ward": {
+    "/ward": {
       "post": {
         "description": "",
         "parameters": [],
@@ -161,7 +161,7 @@
         }
       }
     },
-    "/api/ward/{id}": {
+    "/ward/{id}": {
       "get": {
         "description": "",
         "parameters": [
