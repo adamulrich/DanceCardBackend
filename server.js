@@ -57,6 +57,12 @@ app.use(express.json());
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 
+// const router = require('./routes');
+const stakeRoute = require("./routes/stake");
+const wardRoute = require("./routes/ward");
+
+app.use("/api", stakeRoute);
+app.use("/api", wardRoute);
 app.use('/', require('./routes/index'));
 app.use("/", require('./routes/user'))
 
