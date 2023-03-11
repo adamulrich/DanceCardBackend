@@ -28,6 +28,17 @@ routes.get('/futureSchedule/:{regionId}',
         */
 Schedule.getFutureDanceSchedule);
 
+// GET A DANCE 
+routes.get('/schedule/:{stakeHost}',
+        // #swagger.summary = 'Get a dance'
+        // #swagger.description = 'One dance schedule'
+        /* #swagger.responses[] = {
+            description: 'A Dance',
+            schema: [{ $ref: '#/description/schedule'}]
+        }
+        */
+Schedule.getaDance);
+
 // CREATE New Dance Schedule
 routes.post('/schedule', 
 // #swagger.summary = 'Add a dance'
