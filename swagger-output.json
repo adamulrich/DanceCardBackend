@@ -381,7 +381,31 @@
         }
       }
     },
-    "/dance/{regionId}": {
+    "/region": {
+      "get": {
+        "summary": "returns a region",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "region",
+            "schema": {
+              "$ref": "#/definitions/region"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/region/{regionId}": {
       "get": {
         "summary": "returns a region",
         "description": "",
