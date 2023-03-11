@@ -64,7 +64,8 @@ const wardRoute = require("./routes/ward");
 app.use("/", stakeRoute);
 app.use("/", wardRoute);
 app.use('/', require('./routes/index'));
-app.use("/", require('./routes/user'))
+app.use("/", require('./routes/user'));
+app.use("/", require("./routes/region"))
 
 app.use((req, res, next) => {
     res.setHeader('Content-Type', 'application/json');

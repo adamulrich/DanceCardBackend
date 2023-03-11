@@ -380,6 +380,37 @@
           }
         }
       }
+    },
+    "/dance/{regionId}": {
+      "get": {
+        "summary": "returns a region",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "regionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "region",
+            "schema": {
+              "$ref": "#/definitions/region"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
     }
   }
 }
