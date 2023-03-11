@@ -1,6 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const Region = require("../models/region.js").regionModel;
-
+const user = require('../models/user').userModel;
 
 // get public region
 const getRegions = async (req, res) => {
@@ -26,10 +26,9 @@ const getRegion = async (req, res) => {
         res.setHeader("Content-Type", "text/plain");
         res.status(400).send('Region Not Found');
     }
-
 }
 
-// get public region -- needed??
+// get region
 const getPrivateRegion = async (req, res) => {
     const regionId = req.params.regionId;
     try {
@@ -46,20 +45,33 @@ const getPrivateRegion = async (req, res) => {
 // create region - private
 const createRegion = async (req, res, next) => {
     try {
-        const region = new Region(req.body);
-        try {
-            await region.save();
-        } catch {
-            res.setHeader("Content-Type", "text/plain");
-            res.status(400).json(error);
-            return;
+        //get privs and check to see if they are an admin, or the user, or this is a test
+        let userPrivs = { regionId: 0, regionAdmin: false};
+        let userSub = '';
+        if (req.oidc.isAuthenticated()) {
+            userPrivs = await getPrivs(req.oidc.user.sub);
+            userSub = req.oidc.user.sub;
         }
-        res.setHeader("Content-Type", "application/json");
-        res.status(201).json(region);
+
+        if ( (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+            process.env.ENV_DEV) {
+                const region = new Region(req.body);
+                try {
+                    await region.save();
+                } catch {
+                    res.setHeader("Content-Type", "text/plain");
+                    res.status(400).json(error);
+                    return;
+                }
+                res.setHeader("Content-Type", "application/json");
+                res.status(201).json(region);
+            } else {
+                res.status(401).send("Not authenticated.");
+            }
     } catch {
         res.setHeader("Content-Type", "text/plain");
         res.status(500).send('Region Not Created');
     }  
 }
 
-module.exports = {getRegions, getRegion, createRegion}
+module.exports = {getRegions, getRegion}
