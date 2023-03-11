@@ -9,4 +9,7 @@ GET http://{{hostname}}/user/sj@gmail.com
 ###
 GET http://{{hostname}}/test
 
-POST 
+### regions route
+GET http://{{hostname}}/region
+### region route
+GET http://{{hostname}}/region/2

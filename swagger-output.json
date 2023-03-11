@@ -381,130 +381,57 @@
         }
       }
     },
-    "/schedule/{regionId}": {
+    "/region": {
       "get": {
-        "summary": "This is where you will find the dance schedules. ",
-        "description": "Dances, where, when, and theme",
-        "parameters": [
-          {
-            "name": "regionId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "500": {
-            "description": "Internal Server Error"
-          },
-          "": {
-            "description": "Dance schedule",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/dance"
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/futureSchedule/{regionId}": {
-      "get": {
-        "summary": "Looking forward to a dance, look here.",
-        "description": "Future dances",
-        "parameters": [
-          {
-            "name": "regionId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "": {
-            "description": "Future Dance schedule",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/dance"
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/schedule": {
-      "post": {
-        "summary": "Add a dance",
-        "description": "When, Where, Theme",
+        "summary": "returns a region",
+        "description": "",
         "produces": [
-          "text/plain"
+          "application/json"
         ],
-        "parameters": [
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Add a dance",
-            "schema": {
-              "$ref": "#/definitions/dance"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
-          "201": {
-            "description": "OK"
-          },
-          "402": {
-            "description": "Payment Required"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "put": {
-        "summary": "Update changes to dance",
-        "description": "Changes to dance are...",
-        "parameters": [
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Change a dance",
+          "200": {
+            "description": "region",
             "schema": {
-              "$ref": "#/definitions/dance"
+              "$ref": "#/definitions/region"
             }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
     },
-    "/schedule/{id}": {
-      "delete": {
-        "summary": "Deletes a dance schedule based on ID.",
-        "description": "Deletes a dance schedule from the db based on ID.",
+    "/region/{regionId}": {
+      "get": {
+        "summary": "returns a region",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
-            "name": "id",
+            "name": "regionId",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "Schedule"
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "region",
+            "schema": {
+              "$ref": "#/definitions/region"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }

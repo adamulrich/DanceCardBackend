@@ -11,16 +11,20 @@ const logger = require('morgan');
 const mongoose = require('./database/connect');
 const m2s = require('mongoose-to-swagger');
 const userSchema = m2s(require("./models/user").userModel);
+const regionSchema = m2s(require("./models/region").regionModel);
 const danceSchema = m2s(require("./models/dance").danceModel);
 
 
 // swagger
 let swaggerSpec = require('./swagger-output.json');
 swaggerSpec.definitions = {};
-swaggerSpec.definitions.user = userSchema;
+
+swaggerSpec.definitions.user = userSchema; 
+swaggerSpec.definitions.region = regionSchema; 
 swaggerSpec.definitions.dance = danceSchema;
 swaggerSpec.definitions.user.example = require("./models/user").userExample;
 swaggerSpec.definitions.dance.example = require('./models/dance').danceExample;
+swaggerSpec.definitions.region.example = require('./models/region').regionExample;
 
 //express
 const express = require('express');
@@ -68,6 +72,7 @@ app.use("/", stakeRoute);
 app.use("/", wardRoute);
 app.use('/', require('./routes/index'));
 app.use("/", require('./routes/user'));
+app.use("/", require("./routes/region"))
 app.use('/', require('./routes/dance'));
 
 app.use((req, res, next) => {
