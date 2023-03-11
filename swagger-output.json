@@ -380,6 +380,134 @@
           }
         }
       }
+    },
+    "/schedule/{regionId}": {
+      "get": {
+        "summary": "This is where you will find the dance schedules. ",
+        "description": "Dances, where, when, and theme",
+        "parameters": [
+          {
+            "name": "regionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "": {
+            "description": "Dance schedule",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/dance"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/futureSchedule/{regionId}": {
+      "get": {
+        "summary": "Looking forward to a dance, look here.",
+        "description": "Future dances",
+        "parameters": [
+          {
+            "name": "regionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "": {
+            "description": "Future Dance schedule",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/dance"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schedule": {
+      "post": {
+        "summary": "Add a dance",
+        "description": "When, Where, Theme",
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Add a dance",
+            "schema": {
+              "$ref": "#/definitions/dance"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OK"
+          },
+          "402": {
+            "description": "Payment Required"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update changes to dance",
+        "description": "Changes to dance are...",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Change a dance",
+            "schema": {
+              "$ref": "#/definitions/dance"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/schedule/{id}": {
+      "delete": {
+        "summary": "Deletes a dance schedule based on ID.",
+        "description": "Deletes a dance schedule from the db based on ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Schedule"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   }
 }
