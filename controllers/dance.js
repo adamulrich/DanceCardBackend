@@ -33,11 +33,6 @@ const getAllFutureDances = async (req, res) => {
     }
 };
 
-// GET A DANCE 
-const getaDance = async (req, res) => {
-
-}
-
 // CREATE DANCE
 const createDance = async (req, res) => {
     try {
@@ -68,4 +63,4 @@ const deleteDance = async (req, res) => {
 }
 
 
-module.exports = { getAllDances, getAllFutureDances, getaDance, createDance, updateDance, deleteDance };
+module.exports = { getAllDances, getAllFutureDances,  createDance, updateDance, deleteDance };

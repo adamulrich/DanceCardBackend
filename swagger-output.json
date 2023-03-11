@@ -107,46 +107,6 @@
         }
       }
     },
-    "/schedule/{id}": {
-      "get": {
-        "summary": "Get a dance",
-        "description": "One dance schedule",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "": {
-            "description": "A Dance",
-            "schema": {
-              "$ref": "#/definitions/dance"
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Deletes a dance schedule based on ID.",
-        "description": "Deletes a dance schedule from the db based on ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "Schedule"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/schedule": {
       "post": {
         "summary": "Add a dance",
@@ -191,6 +151,26 @@
         ],
         "responses": {
           "204": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/schedule/{id}": {
+      "delete": {
+        "summary": "Deletes a dance schedule based on ID.",
+        "description": "Deletes a dance schedule from the db based on ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Schedule"
+          }
+        ],
+        "responses": {
+          "200": {
             "description": "OK"
           }
         }

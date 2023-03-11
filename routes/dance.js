@@ -23,16 +23,6 @@ router.get('/futureSchedule/:regionId',
     */
 ctrSchedule.getAllFutureDances);
 
-// GET A DANCE 
-router.get('/schedule/:id',
-    // #swagger.summary = 'Get a dance'
-    // #swagger.description = 'One dance schedule'
-    /* #swagger.responses[] = {
-        description: 'A Dance',
-        schema: { $ref: '#/definitions/dance'}
-    }
-    */
-ctrSchedule.getaDance);
 
 // CREATE New Dance Schedule
 router.post('/schedule', 
