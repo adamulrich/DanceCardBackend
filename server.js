@@ -11,12 +11,14 @@ const logger = require('morgan');
 const mongoose = require('./database/connect');
 const m2s = require('mongoose-to-swagger');
 const userSchema = m2s(require("./models/user").userModel);
+const regionSchema = m2s(require("./models/region").regionModel);
 
 
 // swagger
 let swaggerSpec = require('./swagger-output.json');
 swaggerSpec.definitions = {};
 swaggerSpec.definitions.user = userSchema; 
+swaggerSpec.definitions.region = regionSchema; 
 swaggerSpec.definitions.user.example = require("./models/user").userExample;
 
 //express
