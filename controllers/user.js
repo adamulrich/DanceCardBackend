@@ -9,9 +9,18 @@ const stake = require('../models/stake').stakeModel;
 const ward = require('../models/ward').wardModel
 
 async function getUser(req, res) {
+    
     const userEmail = req.params.email;
 
     try {
+        //get privs and check to see if they are an admin, or the user, or this is a test
+        let userPrivs = { regionId: 0, regionAdmin: false};
+        let userSub = '';
+        if (req.oidc.isAuthenticated()) {
+            userPrivs = await getPrivs(req.oidc.user.sub);
+            userSub = req.oidc.user.sub;
+        }
+
         //get user data from model
         const result = await user.findOne({ 'email': userEmail })
         .populate('stake')
@@ -23,31 +32,205 @@ async function getUser(req, res) {
             setHeaders(res, contentText);
             res.status(404).send(result);
         } else {
-            //return data
-            setHeaders(res, contentJson);
-            //attach stake and ward data
-            const returnUser = {};
-            returnUser.email = result.email;
-            returnUser.name = result.name;
-            returnUser.phone = result.phone;
-            returnUser.regionId = result.regionId;
-            returnUser.regionAdmin = result.regionAdmin;
-            returnUser.cardIsSigned = result.cardIsSigned;
-            returnUser.expirationDate = result.expirationDate;
-            returnUser.parentName = result.parentName;
-            returnUser.parentPhone = result.parentPhone;
-            returnUser.stakeId = result.stakeId;
-            returnUser.stakeName = result.stake.name;
-            returnUser.wardId = result.wardId;
-            returnUser.wardName = result.ward.name;
-            res.status(200).json(returnUser);
+
+            if ( userSub == result.userSub ||
+                (userPrivs.regionAdmin && result.regionId == userPrivs.regionId) ||
+                process.env.ENV_DEV) {
+
+                    //return data
+                setHeaders(res, contentJson);
+                //attach stake and ward data
+                const returnUser = {};
+                returnUser.email = result.email;
+                returnUser.name = result.name;
+                returnUser.phone = result.phone;
+                returnUser.regionId = result.regionId;
+                returnUser.regionAdmin = result.regionAdmin;
+                returnUser.cardIsSigned = result.cardIsSigned;
+                returnUser.expirationDate = result.expirationDate;
+                returnUser.parentName = result.parentName;
+                returnUser.parentPhone = result.parentPhone;
+                returnUser.stakeId = result.stakeId;
+                returnUser.stakeName = result.stake.name;
+                returnUser.wardId = result.wardId;
+                returnUser.wardName = result.ward.name;
+                res.status(200).json(returnUser);
+            } else {
+                res.status(401).send("Not authenticated.");
+            }
         }
+
     } catch (error) {
         setHeaders(res, contentText);
         res.status(500).send(`${error}`);
     }
     
 }
+
+async function createUser(req, res) {
+    try {
+
+        // if they are an admin, or they are creating an account with the currently logged in user
+        // or this is a test
+        let userPrivs = { regionId: 0, regionAdmin: false};
+        let userSub = '';
+        if (req.oidc.isAuthenticated()) {
+            userPrivs = await getPrivs(req.oidc.user.sub);
+            userSub = req.oidc.user.sub;
+        }
+
+        if (userSub == req.body.userSub ||
+            (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+            process.env.ENV_DEV) {
+
+            //get new user data from request object
+            try {
+                const newUser = new user(req.body);
+
+                // create user in database
+                try {
+                    await newUser.save();
+
+                // failed to save
+                } catch (error) {
+                    setHeaders(res, contentText);
+                    res.status(422).send(`Bad data. ${error}`);
+                    return;
+                }
+            
+                // success
+                setHeaders(res, contentText);
+                res.status(201).send(`New User: ${newUser['name']}, email: ${newUser['email']}`);
+
+            // catch unknown errors
+            } catch (error) {
+                setHeaders(res, contentText);
+                res.status(400).send(`${error}`);
+                return;
+            }
+        // failed authorization for user
+        } else {
+            setHeaders(res, contentText);
+            res.status(403).send("Incorrect permissions.");    
+        }
+    } catch (error) {
+        res.status(500).send(`${error}`);
+    }
+}
+
+
+async function updateUser(req, res) {
+    try {
+
+        // if they are an admin, or they are creating an account with the currently logged in user
+        // or this is a test
+        let userPrivs = { regionId: 0, regionAdmin: false};
+        let userSub = '';
+        if (req.oidc.isAuthenticated()) {
+            userPrivs = await getPrivs(req.oidc.user.sub);
+            userSub = req.oidc.user.sub;
+        }
+
+        if (userSub == req.body.userSub ||
+            (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+            process.env.ENV_DEV) {
+
+
+            //get new user data from request object
+            try {
+                const userEmail = req.params.email;
+                const updatedUser = req.body;
+                let result = null;
+
+                // create user in database
+                try {
+                    result = await user.updateOne
+                        ({ email: { $eq: userEmail } },
+                        updatedUser,
+                            { runValidators: true });
+
+                // failed to save
+                } catch (error) {
+                    setHeaders(res, contentText);
+                    res.status(422).send(`Bad data. ${error}`);
+                    return;
+                }
+            
+                let statusCode = 0;
+                let modifiedCount = 0;
+                let matchedCount = 0;
+                if (result) {
+                    modifiedCount = result.modifiedCount;
+                    matchedCount = result.matchedCount;
+                }
+                // if we don't have a result or the modifiedCount is 0 set the status code to 404
+                if (result === null || modifiedCount == 0 ) {
+                    if (matchedCount == 0) {
+                        statusCode = 404;
+                    } else {
+                        statusCode = 417;
+                    }
+                } else {
+                    statusCode = 200
+                }
+                setHeaders(res, contentJson);
+                res.status(statusCode).send(result);
+                // catch unknown errors
+            } catch (error) {
+                setHeaders(res, contentText);
+                res.status(400).send(`${error}`);
+                return;
+            }
+        // failed authorization for user
+        } else {
+            setHeaders(res, contentText);
+            res.status(403).send("Incorrect permissions.");    
+        }
+    } catch (error) {
+        res.status(500).send(`${error}`);
+    }
+}
+
+
+async function deleteUser(req, res) {
+    
+    const userEmail = req.params.email;
+
+    try {
+        //get privs and check to see if they are an admin, or the user, or this is a test
+        let userPrivs = { regionId: 0, regionAdmin: false};
+        let userSub = '';
+        if (req.oidc.isAuthenticated()) {
+            userPrivs = await getPrivs(req.oidc.user.sub);
+            userSub = req.oidc.user.sub;
+        }
+        let result = {};
+        try {
+            //get user data from model
+            result = await user.deleteOne({ email: {$eq: userEmail}});
+            console.log(result);
+        } catch (error) {
+            setHeaders(res, contentText);
+            res.status(422).send(`Bad data. ${error}`);
+            return;
+        }
+        // if deletedCount is 0 set the status code to 404
+        let statusCode = 0;
+        if (result.deletedCount == 0) {
+            statusCode = 404
+        } else {
+            statusCode = 200
+        }
+        setHeaders(res, contentText);
+        res.status(statusCode).send(result);
+    }
+    catch (error) {
+        setHeaders(res, contentText);
+        res.status(500).send(`${error}`);
+    }
+    
+}
+
 
 // sets the headers for the response
 function setHeaders(res, contentType) {
@@ -59,5 +242,23 @@ function setHeaders(res, contentType) {
     
 }
 
+async function getPrivs(userId) {
+    try {
+        const returnValue = [];
+        const userPrivs = await user.findOne({ userSub: userId });
+        if (userPrivs != null) {
+            returnValue.regionAdmin = userPrivs.regionAdmin;
+            returnValue.regionId = userPrivs.regionId;
+            return returnValue
+        } else {
+            console.log("User not found.");
+            return false;
+        }
+    
+    } catch (error) {
+        console.log(`${error}`)        
+        return false;
+    }
+}
 
-module.exports = { getUser };
+module.exports = { getUser, createUser, updateUser, deleteUser };

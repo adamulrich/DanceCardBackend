@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
             type: String, required: true
         },
         email: {
-            type: String, required: true
+            type: String, required: true, unique: true, dropDups: true
         },
         phone: {
             type: String
@@ -27,13 +27,16 @@ const userSchema = new mongoose.Schema(
             type: Boolean, required: true
         },
         expirationDate: {
-            type: Date, required: true
+            type: Date
         },
         regionAdmin: {
             type: Boolean, required: true
         },
         regionId: {
             type: Number, required: true
+        },
+        userSub: {
+            type: String, required: true
         }
     },
     {
@@ -66,9 +69,27 @@ const userExample = {
     email: "sj@gmail.com",
     phone: "123-456-0000",
     regionAdmin: false,
-    regionId: 1
+    regionId: 1,
+    userSub: "github/1234567890"
+}
+
+const userReturnExample = {
+    name: "Sara Johnson",
+    stakeId: 2,
+    stakeName: "Kent, Washington",
+    wardId: 1,
+    wardName: "Pine Tree Ward",
+    parentName: "Bobby Johnson",
+    parentPhone: "123-456-7890",
+    cardIsSigned: false,
+    expirationDate: "05/05/2024",
+    email: "sj@gmail.com",
+    phone: "123-456-0000",
+    regionAdmin: false,
+    regionId: 1,
+    userSub: "github/1234567890"
 }
 
 
 userModel = mongoose.model("user", userSchema, 'user')
-module.exports = {userModel, userExample}
+module.exports = {userModel, userExample, userReturnExample}

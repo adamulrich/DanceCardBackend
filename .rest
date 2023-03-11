@@ -9,3 +9,4 @@ GET http://{{hostname}}/user/sj@gmail.com
 ###
 GET http://{{hostname}}/test
 
+POST 
