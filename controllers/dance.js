@@ -4,7 +4,7 @@ const { default: mongoose } = require('mongoose');
 const schedule = require('../models/dance').danceModel;
 
 // GET DANCES
-async function getDanceSchedule(req, res) {
+async function getAllDances(req, res) {
     // const danceSchedule = req.params.body;
     try {
         // getting dance schedule 
@@ -19,7 +19,7 @@ async function getDanceSchedule(req, res) {
 };
 
 // GET FUTURE DANCES
-const getFutureDanceSchedule = async (req, res) => {
+const getAllFutureDances = async (req, res) => {
     
     try {
         const dancesSchedule = new Date(new Date - 1);
@@ -34,7 +34,9 @@ const getFutureDanceSchedule = async (req, res) => {
 };
 
 // GET A DANCE 
+const getaDance = async (req, res) => {
 
+}
 
 // CREATE DANCE
 const createDance = async (req, res) => {
@@ -57,12 +59,13 @@ const createDance = async (req, res) => {
 
 // UPDATE A DANCE 
 const updateDance = async (req, res) => {
-    try {
-        const  
-    } catch (error) {
-        
-    }
+
+}
+
+// DELETE A DANCE 
+const deleteDance = async (req, res) => {
+
 }
 
 
-module.exports = { getDanceSchedule, getFutureDanceSchedule, createDance };
+module.exports = { getAllDances, getAllFutureDances, getaDance, createDance, updateDance, deleteDance };

@@ -1,8 +1,11 @@
 // dance schema
 const mongoose = require('mongoose');
 
-const danceschema = new mongoose.Schema(
+const danceSchema = new mongoose.Schema(
     {
+        id: {
+            type: Number, required: true
+        },
         regionId: {
             type: Number, required: true
         },
@@ -21,6 +24,7 @@ const danceschema = new mongoose.Schema(
     });
 
 const danceExample = {
+    id: 1,
     regionId: "1",
     StakeHost: "Kent Washington",
     theme: "Throwback 90s",
@@ -28,8 +32,20 @@ const danceExample = {
     date: "05/05/2024"
 }
 
-danceModel = mongoose.model("dance", danceschema, 'dance');
+async function getNewDanceId() {
+    returnId = 1;
+    try {
+        const newId = await danceModel.find({}).sort({ id: -1 }).limit(1);
+        returnId = newId[0]['id'] + 1;
+    } catch {
+        return returnId;    
+    }
+    return returnId;
 
-module.exports = { danceModel, danceExample };
+}
+
+danceModel = mongoose.model("dance", danceSchema, 'dance');
+
+module.exports = { danceModel, danceExample, getNewDanceId };
 
     
