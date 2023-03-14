@@ -327,6 +327,21 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userSub": {
+                  "example": "any"
+                },
+                "regionId": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -335,6 +350,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "422": {
             "description": "Unprocessable Entity"

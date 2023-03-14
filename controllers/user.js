@@ -1,5 +1,6 @@
 const ObjectId = require('mongodb').ObjectId;
 const { default: mongoose } = require('mongoose');
+const { getUserPrivs } = require('../models/user');
 
 const contentText = 'text/plain';
 const contentJson = 'application/json';
@@ -13,14 +14,7 @@ async function getUser(req, res) {
     const userEmail = req.params.email;
 
     try {
-        //get privs and check to see if they are an admin, or the user, or this is a test
-        let userPrivs = { regionId: 0, regionAdmin: false};
-        let userSub = '';
-        if (req.oidc.isAuthenticated()) {
-            userPrivs = await getPrivs(req.oidc.user.sub);
-            userSub = req.oidc.user.sub;
-        }
-
+        
         //get user data from model
         const result = await user.findOne({ 'email': userEmail })
         .populate('stake')
@@ -33,7 +27,10 @@ async function getUser(req, res) {
             res.status(404).send(result);
         } else {
 
-            if ( userSub == result.userSub ||
+            //get privs and check to see if they are an admin, or the user, or this is a test
+            const userPrivs = await getUserPrivs(req);
+
+            if ( userPrivs.sub == result.userSub ||
                 (userPrivs.regionAdmin && result.regionId == userPrivs.regionId) ||
                 process.env.ENV_DEV) {
 
@@ -56,7 +53,7 @@ async function getUser(req, res) {
                 returnUser.wardName = result.ward.name;
                 res.status(200).json(returnUser);
             } else {
-                res.status(401).send("Not authenticated.");
+                res.status(401).send("Incorrect permissions.");
             }
         }
 
@@ -72,14 +69,9 @@ async function createUser(req, res) {
 
         // if they are an admin, or they are creating an account with the currently logged in user
         // or this is a test
-        let userPrivs = { regionId: 0, regionAdmin: false};
-        let userSub = '';
-        if (req.oidc.isAuthenticated()) {
-            userPrivs = await getPrivs(req.oidc.user.sub);
-            userSub = req.oidc.user.sub;
-        }
+        const userPrivs = getUserPrivs(req);
 
-        if (userSub == req.body.userSub ||
+        if (userPrivs.sub == req.body.userSub ||
             (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
             process.env.ENV_DEV) {
 
@@ -124,17 +116,11 @@ async function updateUser(req, res) {
 
         // if they are an admin, or they are creating an account with the currently logged in user
         // or this is a test
-        let userPrivs = { regionId: 0, regionAdmin: false};
-        let userSub = '';
-        if (req.oidc.isAuthenticated()) {
-            userPrivs = await getPrivs(req.oidc.user.sub);
-            userSub = req.oidc.user.sub;
-        }
+        const userPrivs = getUserPrivs(req);
 
-        if (userSub == req.body.userSub ||
+        if (userPrivs.sub == req.body.userSub ||
             (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
             process.env.ENV_DEV) {
-
 
             //get new user data from request object
             try {
@@ -198,31 +184,39 @@ async function deleteUser(req, res) {
 
     try {
         //get privs and check to see if they are an admin, or the user, or this is a test
-        let userPrivs = { regionId: 0, regionAdmin: false};
-        let userSub = '';
-        if (req.oidc.isAuthenticated()) {
-            userPrivs = await getPrivs(req.oidc.user.sub);
-            userSub = req.oidc.user.sub;
-        }
-        let result = {};
-        try {
-            //get user data from model
-            result = await user.deleteOne({ email: {$eq: userEmail}});
-            console.log(result);
-        } catch (error) {
+        const userPrivs = getUserPrivs(req);
+        
+        if (userPrivs.sub == req.body.userSub ||
+            (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+            process.env.ENV_DEV) {
+
+            let result = {};
+            
+            try {
+                //get user data from model
+                result = await user.deleteOne({ email: {$eq: userEmail}});
+                console.log(result);
+            } catch (error) {
+                setHeaders(res, contentText);
+                res.status(422).send(`Bad data. ${error}`);
+                return;
+            }
+            // if deletedCount is 0 set the status code to 404
+            let statusCode = 0;
+            if (result.deletedCount == 0) {
+                statusCode = 404
+            } else {
+                statusCode = 200
+            }
             setHeaders(res, contentText);
-            res.status(422).send(`Bad data. ${error}`);
-            return;
-        }
-        // if deletedCount is 0 set the status code to 404
-        let statusCode = 0;
-        if (result.deletedCount == 0) {
-            statusCode = 404
+            res.status(statusCode).send(result);
+                    // failed authorization for user
         } else {
-            statusCode = 200
+            setHeaders(res, contentText);
+            res.status(403).send("Incorrect permissions.");    
         }
-        setHeaders(res, contentText);
-        res.status(statusCode).send(result);
+
+
     }
     catch (error) {
         setHeaders(res, contentText);
@@ -240,25 +234,6 @@ function setHeaders(res, contentType) {
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Z-Key');
     res.setHeader('Access-Control-Allow-Credentials', true);
     
-}
-
-async function getPrivs(userId) {
-    try {
-        const returnValue = [];
-        const userPrivs = await user.findOne({ userSub: userId });
-        if (userPrivs != null) {
-            returnValue.regionAdmin = userPrivs.regionAdmin;
-            returnValue.regionId = userPrivs.regionId;
-            return returnValue
-        } else {
-            console.log("User not found.");
-            return false;
-        }
-    
-    } catch (error) {
-        console.log(`${error}`)        
-        return false;
-    }
 }
 
 module.exports = { getUser, createUser, updateUser, deleteUser };

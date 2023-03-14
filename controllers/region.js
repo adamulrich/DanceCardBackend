@@ -46,12 +46,7 @@ const getPrivateRegion = async (req, res) => {
 const createRegion = async (req, res, next) => {
     try {
         //get privs and check to see if they are an admin, or the user, or this is a test
-        let userPrivs = { regionId: 0, regionAdmin: false};
-        let userSub = '';
-        if (req.oidc.isAuthenticated()) {
-            userPrivs = await getPrivs(req.oidc.user.sub);
-            userSub = req.oidc.user.sub;
-        }
+        const userPrivs = await getUserPrivs(req);
 
         if ( (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
             process.env.ENV_DEV) {
