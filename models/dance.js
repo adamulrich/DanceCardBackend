@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 const danceSchema = new mongoose.Schema(
-    [{
+   {
         regionId: {
             type: Number, required: true
         },
@@ -17,21 +17,37 @@ const danceSchema = new mongoose.Schema(
         },
         dateTime: {
             type: Date, required: true
+        },
+        id: {
+            type: Number, required: true
         }
-    }]);
+    });
 
-const danceExample = [{
+const danceExample = {
     regionId: "1",
-    StakeHost: "Kent Washington",
+    stakeHost: "Kent Washington",
     theme: "Throwback 90s",
     location: "999 West Over Street, Kent, Washington",
-    date: "05/05/2024"
-}]
+    dateTime: "2024-05-29"
+}
+
+async function getNewDanceId() {
+    returnId = 1;
+    try {
+        const newId = await danceModel.find({}).sort({ id: -1 }).limit(1);
+        returnId = newId[0]['id'] + 1;
+    } catch {
+        return returnId; 
+    }
+    return returnId;
+
+}
+
 
 
 
 danceModel = mongoose.model("dance", danceSchema, 'dance');
 
-module.exports = { danceModel, danceExample};
+module.exports = { danceModel, danceExample, getNewDanceId};
 
     

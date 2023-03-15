@@ -449,6 +449,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "500": {
             "description": "Internal Server Error"
           },
@@ -467,7 +470,7 @@
         }
       }
     },
-    "/futureSchedule/{regionId}": {
+    "/schedule/future/{regionId}": {
       "get": {
         "summary": "Looking forward to a dance, look here.",
         "description": "Future dances",
@@ -480,6 +483,12 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
           "": {
             "description": "Future Dance schedule",
             "schema": {
@@ -499,9 +508,6 @@
       "post": {
         "summary": "Add a dance",
         "description": "When, Where, Theme",
-        "produces": [
-          "text/plain"
-        ],
         "parameters": [
           {
             "name": "obj",
@@ -516,18 +522,27 @@
           "201": {
             "description": "OK"
           },
-          "402": {
-            "description": "Payment Required"
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
           }
         }
-      },
+      }
+    },
+    "/schedule/{id}": {
       "put": {
         "summary": "Update changes to dance",
         "description": "Changes to dance are...",
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Schedule"
+          },
           {
             "name": "obj",
             "in": "body",
@@ -540,11 +555,15 @@
         "responses": {
           "204": {
             "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
-      }
-    },
-    "/schedule/{id}": {
+      },
       "delete": {
         "summary": "Deletes a dance schedule based on ID.",
         "description": "Deletes a dance schedule from the db based on ID.",
