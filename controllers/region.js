@@ -1,6 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const Region = require("../models/region.js").regionModel;
-const user = require('../models/user').userModel;
+const user = require('../models/user');
+
 
 // get public region
 const getRegions = async (req, res) => {
@@ -14,10 +15,11 @@ const getRegions = async (req, res) => {
     }
 
 }
+
 // get public region
 const getRegion = async (req, res) => {
     const regionId = req.params.regionId;
-    //console.log(regionId);
+    console.log(regionId);
     try {
         const result = await Region.find({"regionId": regionId});
         res.setHeader("Content-Type", "application/json");
@@ -46,7 +48,7 @@ const getPrivateRegion = async (req, res) => {
 const createRegion = async (req, res, next) => {
     try {
         //get privs and check to see if they are an admin, or the user, or this is a test
-        const userPrivs = await getUserPrivs(req);
+        const userPrivs = await user.getUserPrivs(req);
 
         if ( (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
             process.env.ENV_DEV) {
@@ -61,7 +63,7 @@ const createRegion = async (req, res, next) => {
                 res.setHeader("Content-Type", "application/json");
                 res.status(201).json(region);
             } else {
-                res.status(401).send("Not authenticated.");
+                res.status(401).send("Incorrect permissions");
             }
     } catch {
         res.setHeader("Content-Type", "text/plain");
@@ -69,4 +71,4 @@ const createRegion = async (req, res, next) => {
     }  
 }
 
-module.exports = {getRegions, getRegion}
+module.exports = {getRegions, getRegion, createRegion}
