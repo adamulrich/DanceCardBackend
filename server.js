@@ -13,6 +13,7 @@ const m2s = require('mongoose-to-swagger');
 const userSchema = m2s(require("./models/user").userModel);
 const regionSchema = m2s(require("./models/region").regionModel);
 const danceSchema = m2s(require("./models/dance").danceModel);
+const stakeSchema = m2s(require("./models/stake").stakeModel);
 
 
 // swagger
@@ -22,9 +23,11 @@ swaggerSpec.definitions = {};
 swaggerSpec.definitions.user = userSchema; 
 swaggerSpec.definitions.region = regionSchema; 
 swaggerSpec.definitions.dance = danceSchema;
+swaggerSpec.definitions.stake = stakeSchema;
 swaggerSpec.definitions.user.example = require("./models/user").userExample;
 swaggerSpec.definitions.dance.example = require('./models/dance').danceExample;
 swaggerSpec.definitions.region.example = require('./models/region').regionExample;
+swaggerSpec.definitions.stake.example = require('./models/stake').stakeExample;
 
 //express
 const express = require('express');

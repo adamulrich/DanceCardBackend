@@ -14,10 +14,23 @@
   "paths": {
     "/stake": {
       "post": {
+        "summary": "Add a stake",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Add a stake",
+            "schema": {
+              "$ref": "#/definitions/stake"
+            }
+          }
+        ],
         "responses": {
           "200": {
+            "description": "OK"
+          },
+          "201": {
             "description": "OK"
           },
           "404": {
@@ -29,11 +42,21 @@
         }
       },
       "get": {
+        "summary": "This is where you will find Stake information. ",
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/stake"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "404": {
             "description": "Not Found"
@@ -46,18 +69,23 @@
     },
     "/stake/{id}": {
       "get": {
+        "summary": "This is where you will find Stake information. ",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Stake id"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/stake"
+            }
           },
           "404": {
             "description": "Not Found"
@@ -68,13 +96,15 @@
         }
       },
       "delete": {
+        "summary": "This is where you will find Stake information. ",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Stake id"
           }
         ],
         "responses": {
@@ -90,35 +120,30 @@
         }
       },
       "put": {
+        "summary": "Modify a stake",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Stake id"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "Modify a stake",
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "age": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/stake"
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "OK"
+          },
+          "204": {
             "description": "OK"
           },
           "404": {
