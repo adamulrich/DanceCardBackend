@@ -13,7 +13,7 @@ router.get('/schedule/:regionId',
 ctrSchedule.getAllDances);
 
 // Get Future Schedule 
-router.get('/futureSchedule/:regionId', 
+router.get('/schedule/future/:regionId', 
     // #swagger.summary = 'Looking forward to a dance, look here.'
     // #swagger.description = 'Future dances'
     /* #swagger.responses[] = {
@@ -35,9 +35,10 @@ ctrSchedule.createDance);
 
 
  // Change Dance Schedule
- router.put('/schedule', 
+ router.put('/schedule/:id', 
     // #swagger.summary = 'Update changes to dance'
     // #swagger.description = 'Changes to dance are...'
+    // #swagger.parameters['id'] = { description: 'Schedule' } 
     /* #swagger.responses[204] = {description: 'OK'}}}*/
     /*#swagger.parameters['obj'] = 
     {in:'body',description: 'Change a dance', schema: { $ref:'#/definitions/dance'}} */

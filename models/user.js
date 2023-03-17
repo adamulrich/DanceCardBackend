@@ -82,7 +82,7 @@ const userReturnExample = {
     parentName: "Bobby Johnson",
     parentPhone: "123-456-7890",
     cardIsSigned: false,
-    expirationDate: "05/05/2024",
+    expirationDate: "2024-05-05T07:00:00.000+00:00",
     email: "sj@gmail.com",
     phone: "123-456-0000",
     regionAdmin: false,
