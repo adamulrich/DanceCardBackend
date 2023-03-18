@@ -2,7 +2,7 @@ const { default: mongoose } = require('mongoose');
 const Stake = require("../models/stake").stakeModel;
 const contentText = 'text/plain';
 const contentJson = 'application/json';
-
+const {getNewStakeId} = require('../models/stake');
 const { getUserPrivs } = require('../models/user');
 
 
@@ -14,11 +14,13 @@ const add_one = async (req, res) => {
       process.env.ENV_DEV) {
       const { id } = req.params;
       const stake = Stake(req.body);
-      stake.stakeId=getNewStakeId();
+      stake.stakeId= await getNewStakeId();
+      console.log(stake.stakeId);
+      
       await stake
         .save()
         .then((data) => res.status(201).json(data))
-        .catch((error) => res.status(404).json({ message: "Stake not updated" }));
+        .catch((error) => res.status(404).json({ error }));
 
       return;
     } else {
@@ -140,6 +142,6 @@ const update_one = async (req, res) => {
   }
 };
 
-module.exports = { add_one, getall, getSingle, delete_one, update_one }
+module.exports = { add_one, getall, getSingle, delete_one, update_one, getallbyregion }
 
 

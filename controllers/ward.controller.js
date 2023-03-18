@@ -1,15 +1,32 @@
+const { default: mongoose } = require('mongoose');
+const Ward = require("../models/ward").wardModel;
+const contentText = 'text/plain';
+const contentJson = 'application/json';
+const {getNewWardId} = require('../models/ward');
+const { getUserPrivs } = require('../models/user');
 
-const wardSchema = require("../models/ward");
 
-
-exports.add_one = async (req, res) => {
+const add_one = async (req, res) => {
   try {
-    const ward = wardSchema(req.body);
-    await ward
-      .save()
-      .then((data) => res.status(200).json(data))
-      .catch((error) => res.status(404).json({ message: "Ward not added" }));
-    return;
+    const userPrivs = getUserPrivs(req);
+    if (
+      (userPrivs.regionAdmin && req.body.wardId == userPrivs.wardId) ||
+      process.env.ENV_DEV) {
+      const { id } = req.params;
+      const ward = Ward(req.body);
+      ward.wardId= await getNewWardId();
+      console.log(ward.wardId);
+      
+      await Ward
+        .save()
+        .then((data) => res.status(201).json(data))
+        .catch((error) => res.status(404).json({ error }));
+
+      return;
+    } else {
+      setHeaders(res, contentText);
+      res.status(403).send("Incorrect permissions.");
+    }
 
   } catch (error) {
     //500 server error
@@ -19,9 +36,9 @@ exports.add_one = async (req, res) => {
 
 
 
-exports.getall = async (req, res) => {
+const getall = async (req, res) => {
   try {
-    await wardSchema
+    await Ward
       .find()
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(404).json({ message: "Ward not found" }));
@@ -35,11 +52,28 @@ exports.getall = async (req, res) => {
 
 
 
-exports.getSingle = async (req, res) => {
+const getallbyregion = async (req, res) => {
   try {
     const { id } = req.params;
-    await wardSchema
-      .findById(id)
+    await Ward
+      .find({'wardId': id})
+      .then((data) => res.status(200).json(data))
+      .catch((error) => res.status(404).json({ message: "Ward not found" }));
+    return;
+
+  } catch (error) {
+    //500 server error
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+const getSingle = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Ward
+      .findOne({ 'wardId': id })
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(404).json({ message: "Ward not found" }));
 
@@ -53,17 +87,23 @@ exports.getSingle = async (req, res) => {
 
 
 
-
-
-exports.delete_one = async (req, res) => {
+const delete_one = async (req, res) => {
   try {
-    const { id } = req.params;
-    await wardSchema
-      .remove({ _id: id })
+    const userPrivs = getUserPrivs(req);
+    if (
+      (userPrivs.regionAdmin && req.body.wardId == userPrivs.wardId) ||
+      process.env.ENV_DEV) {
+      const { id } = req.params;
+      await Ward
+      .remove({ 'wardId': id })
       .then((data) => res.status(200).json(data))
       .catch((error) => res.status(404).json({ message: "Ward not deleted" }));
 
-    return;
+      return;
+    } else {
+      setHeaders(res, contentText);
+      res.status(403).send("Incorrect permissions.");
+    }
 
   } catch (error) {
     //500 server error
@@ -75,21 +115,33 @@ exports.delete_one = async (req, res) => {
 
 
 
-exports.update_one = async (req, res) => {
+const update_one = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { name, age, email } = req.body;
-    wardSchema
-      .updateOne({ _id: id }, { $set: { name, age, email } })
-      .then((data) => res.status(200).json(data))
-      .catch((error) => res.status(404).json({ message: "Ward not updated" }));
+    const userPrivs = getUserPrivs(req);
+    if (
+      (userPrivs.regionAdmin && req.body.wardId == userPrivs.wardId) ||
+      process.env.ENV_DEV) {
+      const { id } = req.params;
+      const updatedWard = req.body;
+      Ward
+        .updateOne({ wardId: { $eq: id } },
+          updatedWard,
+          { runValidators: true })
+        .then((data) => res.status(200).json(data))
+        .catch((error) => res.status(404).json({ message: "Ward not updated" }));
 
-    return;
+      return;
+    } else {
+      setHeaders(res, contentText);
+      res.status(403).send("Incorrect permissions.");
+    }
 
   } catch (error) {
     //500 server error
     res.status(500).json({ message: error.message });
   }
 };
+
+module.exports = { add_one, getall, getSingle, delete_one, update_one, getallbyregion }
 
 
