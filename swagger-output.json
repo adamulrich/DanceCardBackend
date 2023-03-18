@@ -14,11 +14,24 @@
   "paths": {
     "/stake": {
       "post": {
+        "summary": "Add a stake",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Add a stake",
+            "schema": {
+              "$ref": "#/definitions/stake"
+            }
+          }
+        ],
         "responses": {
-          "200": {
+          "201": {
             "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "404": {
             "description": "Not Found"
@@ -29,11 +42,55 @@
         }
       },
       "get": {
+        "summary": "This is where you will find Stake information. ",
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/stake"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/stakes/region/{id}": {
+      "get": {
+        "summary": "This is where you will find Stake information. ",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/stake"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "404": {
             "description": "Not Found"
@@ -46,18 +103,23 @@
     },
     "/stake/{id}": {
       "get": {
+        "summary": "This is where you will find Stake information. ",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Stake id"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/stake"
+            }
           },
           "404": {
             "description": "Not Found"
@@ -68,18 +130,35 @@
         }
       },
       "delete": {
+        "summary": "This is where you will find Stake information. ",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Stake id"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "regionId": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "404": {
             "description": "Not Found"
@@ -90,36 +169,34 @@
         }
       },
       "put": {
+        "summary": "Modify a stake",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Stake id"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "Modify a stake",
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "age": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/stake"
             }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "204": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "404": {
             "description": "Not Found"
@@ -131,12 +208,22 @@
       }
     },
     "/ward": {
-      "post": {
+      "get": {
+        "summary": "This is where you will find ward information. ",
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ward"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "404": {
             "description": "Not Found"
@@ -146,12 +233,59 @@
           }
         }
       },
-      "get": {
+      "post": {
+        "summary": "Add a ward",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Add a stake",
+            "schema": {
+              "$ref": "#/definitions/ward"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/wards/stake/{id}": {
+      "get": {
+        "summary": "This is where you will find ward information. ",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ward"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "404": {
             "description": "Not Found"
@@ -164,40 +298,23 @@
     },
     "/ward/{id}": {
       "get": {
+        "summary": "This is where you will find ward information. ",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ward id"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ward"
+            }
           },
           "404": {
             "description": "Not Found"
@@ -208,13 +325,53 @@
         }
       },
       "put": {
+        "summary": "Modify a ward",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ward id"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Modify a ward",
+            "schema": {
+              "$ref": "#/definitions/ward"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "This is where you will find ward information. ",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ward id"
           },
           {
             "name": "body",
@@ -222,13 +379,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "age": {
-                  "example": "any"
-                },
-                "email": {
+                "regionId": {
                   "example": "any"
                 }
               }
@@ -239,8 +390,11 @@
           "200": {
             "description": "OK"
           },
-          "404": {
-            "description": "Not Found"
+          "403": {
+            "description": "Forbidden"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
           },
           "500": {
             "description": "Internal Server Error"
@@ -416,9 +570,6 @@
           },
           "400": {
             "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
           }
         }
       },
@@ -478,9 +629,6 @@
           },
           "400": {
             "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
           }
         }
       }
@@ -498,6 +646,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "500": {
             "description": "Internal Server Error"
           },
@@ -516,7 +667,7 @@
         }
       }
     },
-    "/futureSchedule/{regionId}": {
+    "/schedule/future/{regionId}": {
       "get": {
         "summary": "Looking forward to a dance, look here.",
         "description": "Future dances",
@@ -529,6 +680,12 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
           "": {
             "description": "Future Dance schedule",
             "schema": {
@@ -548,9 +705,6 @@
       "post": {
         "summary": "Add a dance",
         "description": "When, Where, Theme",
-        "produces": [
-          "text/plain"
-        ],
         "parameters": [
           {
             "name": "obj",
@@ -565,18 +719,27 @@
           "201": {
             "description": "OK"
           },
-          "402": {
-            "description": "Payment Required"
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
           }
         }
-      },
+      }
+    },
+    "/schedule/{id}": {
       "put": {
         "summary": "Update changes to dance",
         "description": "Changes to dance are...",
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Schedule"
+          },
           {
             "name": "obj",
             "in": "body",
@@ -589,11 +752,15 @@
         "responses": {
           "204": {
             "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
-      }
-    },
-    "/schedule/{id}": {
+      },
       "delete": {
         "summary": "Deletes a dance schedule based on ID.",
         "description": "Deletes a dance schedule from the db based on ID.",

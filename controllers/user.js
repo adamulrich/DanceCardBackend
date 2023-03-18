@@ -1,6 +1,7 @@
 const ObjectId = require('mongodb').ObjectId;
 const { default: mongoose } = require('mongoose');
 const { getUserPrivs } = require('../models/user');
+const { setHeaders } = require('./index');
 
 const contentText = 'text/plain';
 const contentJson = 'application/json';
@@ -69,7 +70,7 @@ async function createUser(req, res) {
 
         // if they are an admin, or they are creating an account with the currently logged in user
         // or this is a test
-        const userPrivs = getUserPrivs(req);
+        const userPrivs = await getUserPrivs(req);
 
         if (userPrivs.sub == req.body.userSub ||
             (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
@@ -116,7 +117,7 @@ async function updateUser(req, res) {
 
         // if they are an admin, or they are creating an account with the currently logged in user
         // or this is a test
-        const userPrivs = getUserPrivs(req);
+        const userPrivs = await getUserPrivs(req);
 
         if (userPrivs.sub == req.body.userSub ||
             (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
@@ -184,7 +185,7 @@ async function deleteUser(req, res) {
 
     try {
         //get privs and check to see if they are an admin, or the user, or this is a test
-        const userPrivs = getUserPrivs(req);
+        const userPrivs = await getUserPrivs(req);
         
         if (userPrivs.sub == req.body.userSub ||
             (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
@@ -227,13 +228,5 @@ async function deleteUser(req, res) {
 
 
 // sets the headers for the response
-function setHeaders(res, contentType) {
-    res.setHeader('Content-Type', contentType);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Z-Key');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    
-}
 
 module.exports = { getUser, createUser, updateUser, deleteUser };

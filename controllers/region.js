@@ -21,7 +21,7 @@ const getRegion = async (req, res) => {
     const regionId = req.params.regionId;
     console.log(regionId);
     try {
-        const result = await Region.find({"regionId": regionId});
+        const result = await Region.findOne({"regionId": regionId});
         res.setHeader("Content-Type", "application/json");
         res.status(200).json(result);
     } catch {
@@ -128,3 +128,4 @@ const deleteRegion = async (req, res) => {
     }
 }
 module.exports = {getRegions, getRegion, createRegion, updateRegion, deleteRegion}
+
