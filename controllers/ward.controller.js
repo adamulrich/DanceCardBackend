@@ -4,8 +4,7 @@ const contentText = 'text/plain';
 const contentJson = 'application/json';
 const {getNewWardId} = require('../models/ward');
 const { getUserPrivs } = require('../models/user');
-const { setHeaders } = require('./index');
-
+const { setHeaders, isRegionAdmin } = require('./utils');
 
 
 const getall = async (req, res) => {
@@ -62,8 +61,7 @@ const add_one = async (req, res) => {
     const userPrivs = await getUserPrivs(req);
     console.log(userPrivs);
     console.log(req.body);
-    if (
-      (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+    if ( isRegionAdmin(userPrivs, req.body.regionId) ||
       process.env.ENV_DEV) {
       const { id } = req.params;
       const ward = Ward(req.body);
@@ -90,8 +88,7 @@ const add_one = async (req, res) => {
 const update_one = async (req, res) => {
   try {
     const userPrivs = await getUserPrivs(req);
-    if (
-      (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+    if ( isRegionAdmin(userPrivs, req.body.regionId) ||
       process.env.ENV_DEV) {
       const { id } = req.params;
       const updatedWard = req.body;
@@ -117,8 +114,7 @@ const update_one = async (req, res) => {
 const delete_one = async (req, res) => {
   try {
     const userPrivs = await getUserPrivs(req);
-    if (
-      (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+    if ( isRegionAdmin(userPrivs, req.body.regionId) ||
       process.env.ENV_DEV) {
       const { id } = req.params;
       let result = {};

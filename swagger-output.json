@@ -565,7 +565,13 @@
           "200": {
             "description": "region",
             "schema": {
-              "$ref": "#/definitions/region"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/region"
+              },
+              "xml": {
+                "name": "main"
+              }
             }
           },
           "400": {
@@ -629,6 +635,93 @@
           },
           "400": {
             "description": "Bad Request"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a user by admin region ID",
+        "description": "Update a user by admin region ID",
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "regionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Update region info",
+            "schema": {
+              "$ref": "#/definitions/region"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "deletes a region by region ID",
+        "description": "",
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "regionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "regionId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "region",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/region"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

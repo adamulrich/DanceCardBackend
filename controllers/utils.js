@@ -1,3 +1,4 @@
+
 function setHeaders(res, contentType) {
     res.setHeader('Content-Type', contentType);
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -7,4 +8,9 @@ function setHeaders(res, contentType) {
     
 }
 
-module.exports = {setHeaders}
+function isRegionAdmin(userPrivs, regionId) {
+    return (userPrivs.isRegionAdmin && userPrivs.regionId == regionId)
+}
+
+module.exports = {setHeaders, isRegionAdmin}
+
