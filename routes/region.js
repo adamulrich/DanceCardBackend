@@ -54,5 +54,41 @@ router.post("/region", async (req, res) => {
     }
 })
 
+router.put('/region/:regionId', async (req, res) => {
+    if (req.oidc.isAuthenticated() || process.env.ENV_DEV) {
+        // #swagger.summary = 'Update a user by admin region ID'
+        // #swagger.description = 'Update a user by admin region ID'
+        /* #swagger.responses[204] = {
+                description: 'OK',
+                }
+        }
+        */ 
+        /*  #swagger.parameters['obj'] = {
+                    in: 'body',
+                    description: 'Update region info',
+                    schema: { $ref: '#/definitions/region' }
+            } */
+       region.updateRegion(req, res);  
+    } else {
+        res.status(401).send("Not authenticated.");
+    }
+})
+
+router.delete('/region/:regionId', async (req, res) => {
+    if (req.oidc.isAuthenticated() || process.env.ENV_DEV) {
+        // #swagger.summary = 'deletes a region by region ID'
+        // #swagger.description = ''
+        /* #swagger.responses[200] = {
+            description: 'region',
+            schema: [{ $ref: '#/definitions/region' }]
+             }
+        }
+        */
+       region.deleteRegion(req, res);  
+    } else {
+        res.status(401).send("Not authenticated.");
+    }
+})
+
 
 module.exports = router;
