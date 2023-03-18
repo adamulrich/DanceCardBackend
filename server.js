@@ -14,6 +14,7 @@ const userSchema = m2s(require("./models/user").userModel);
 const regionSchema = m2s(require("./models/region").regionModel);
 const danceSchema = m2s(require("./models/dance").danceModel);
 const stakeSchema = m2s(require("./models/stake").stakeModel);
+const wardSchema = m2s(require("./models/ward").wardModel);
 
 
 // swagger
@@ -24,10 +25,12 @@ swaggerSpec.definitions.user = userSchema;
 swaggerSpec.definitions.region = regionSchema; 
 swaggerSpec.definitions.dance = danceSchema;
 swaggerSpec.definitions.stake = stakeSchema;
+swaggerSpec.definitions.ward = wardSchema;
 swaggerSpec.definitions.user.example = require("./models/user").userExample;
 swaggerSpec.definitions.dance.example = require('./models/dance').danceExample;
 swaggerSpec.definitions.region.example = require('./models/region').regionExample;
 swaggerSpec.definitions.stake.example = require('./models/stake').stakeExample;
+swaggerSpec.definitions.ward.example = require('./models/ward').wardExample;
 
 //express
 const express = require('express');

@@ -2,13 +2,14 @@ const { default: mongoose } = require('mongoose');
 const Stake = require("../models/stake").stakeModel;
 const contentText = 'text/plain';
 const contentJson = 'application/json';
+const { setHeaders } = require('./index');
 
 const { getUserPrivs } = require('../models/user');
 
 
 const add_one = async (req, res) => {
   try {
-    const userPrivs = getUserPrivs(req);
+    const userPrivs = await getUserPrivs(req);
     if (
       (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
       process.env.ENV_DEV) {
@@ -87,7 +88,7 @@ const getSingle = async (req, res) => {
 
 const delete_one = async (req, res) => {
   try {
-    const userPrivs = getUserPrivs(req);
+    const userPrivs = await getUserPrivs(req);
     if (
       (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
       process.env.ENV_DEV) {
@@ -115,7 +116,7 @@ const delete_one = async (req, res) => {
 
 const update_one = async (req, res) => {
   try {
-    const userPrivs = getUserPrivs(req);
+    const userPrivs = await getUserPrivs(req);
     if (
       (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
       process.env.ENV_DEV) {
