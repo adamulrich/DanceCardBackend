@@ -117,10 +117,11 @@ const update_one = async (req, res) => {
 
 const delete_one = async (req, res) => {
   try {
+    const { id, regionId } = req.params;
     const userPrivs = await getUserPrivs(req);
-    if ( isRegionAdmin(userPrivs, req.body.regionId) ||
+    if ( isRegionAdmin(userPrivs, regionId) ||
       process.env.ENV_DEV) {
-      const { id, regionId } = req.params;
+      
       let result = {};
             
       try {
