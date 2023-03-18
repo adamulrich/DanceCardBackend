@@ -10,12 +10,17 @@ const wardSchema = new mongoose.Schema(
         },
         stakeId: {
             type: Number, required: true
+        },
+        regionId: {
+            type: Number, required: true
         }
+
     });
 
 const wardExample = {
     name: "Pine Tree Ward",
     wardId: 1,
+    regionId: 1,
     stakeId: 1
 }
 
