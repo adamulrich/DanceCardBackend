@@ -53,7 +53,7 @@ router.put("/ward/:id",(req, res) =>  {
         {in:'body',description: 'Modify a ward', schema: { $ref:'#/definitions/ward'}} */
         ctrWard.update_one(req, res)})
             
-router.delete("/ward/:id", (req, res) =>  {
+router.delete("/ward/:id/region/:regionId", (req, res) =>  {
 // #swagger.summary = 'This is where you will find ward information. '
 // #swagger.description = ''
 // #swagger.parameters['id'] = { description: 'ward id' }

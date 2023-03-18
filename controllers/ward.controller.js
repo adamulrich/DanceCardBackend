@@ -43,12 +43,17 @@ const getAllByStake = async (req, res) => {
 const getSingle = async (req, res) => {
   try {
     const { id } = req.params;
-    await Ward
-      .findOne({ 'wardId': id })
-      .then((data) => res.status(200).json(data))
-      .catch((error) => res.status(404).json({ message: "Ward not found" }));
 
-    return;
+    const result = await Ward.findOne({ 'wardId': id }).then();      
+
+    if (result == null || result.length == 0) {
+      setHeaders(res, contentText);
+      res.status(404).send(result);
+    } else {
+      setHeaders(res,contentJson)
+      res.status(200).json(result);
+    }
+  
 
   } catch (error) {
     //500 server error
@@ -66,7 +71,6 @@ const add_one = async (req, res) => {
       const { id } = req.params;
       const ward = Ward(req.body);
       ward.wardId= await getNewWardId();
-      console.log(ward.wardId);
       
       await ward
         .save()
@@ -116,12 +120,12 @@ const delete_one = async (req, res) => {
     const userPrivs = await getUserPrivs(req);
     if ( isRegionAdmin(userPrivs, req.body.regionId) ||
       process.env.ENV_DEV) {
-      const { id } = req.params;
+      const { id, regionId } = req.params;
       let result = {};
             
       try {
           //get user data from model
-          result = await Ward.deleteOne({ 'wardId': id , 'regionId': req.body.regionId});
+          result = await Ward.deleteOne({ 'wardId': id , 'regionId': regionId});
           console.log(result);
       } catch (error) {
           setHeaders(res, contentText);

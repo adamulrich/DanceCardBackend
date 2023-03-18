@@ -361,7 +361,9 @@
             "description": "Internal Server Error"
           }
         }
-      },
+      }
+    },
+    "/ward/{id}/region/{regionId}": {
       "delete": {
         "summary": "This is where you will find ward information. ",
         "description": "",
@@ -372,6 +374,12 @@
             "required": true,
             "type": "string",
             "description": "ward id"
+          },
+          {
+            "name": "regionId",
+            "in": "path",
+            "required": true,
+            "type": "string"
           },
           {
             "name": "body",
