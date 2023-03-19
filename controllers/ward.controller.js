@@ -44,14 +44,26 @@ const getSingle = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const result = await Ward.findOne({ 'wardId': id }).then();      
+    const result = await Ward.findOne({ 'wardId': id })
+    .populate('stake')
+    .populate('region');
+      
 
     if (result == null || result.length == 0) {
       setHeaders(res, contentText);
       res.status(404).send(result);
     } else {
+      const returnValue = {};
+      returnValue.wardId = result.wardId;
+      returnValue.name = result.name;
+      returnValue.stakeId = result.stakeId;
+      returnValue.regionId = result.regionId;
+      returnValue.stakeName = result.stake.name;
+      returnValue.regionName = result.region.name;
+      
+    
       setHeaders(res,contentJson)
-      res.status(200).json(result);
+      res.status(200).json(returnValue);
     }
   
 

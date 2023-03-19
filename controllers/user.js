@@ -29,7 +29,8 @@ async function getUser(req, res) {
 
             //get privs and check to see if they are an admin, or the user, or this is a test
             const userPrivs = await getUserPrivs(req);
-
+            console.log(userPrivs.sub);
+            console.log(result.userSub);
             if ( userPrivs.sub == result.userSub ||
                 isRegionAdmin(userPrivs, req.body.regionId) || 
                 process.env.ENV_DEV) {
