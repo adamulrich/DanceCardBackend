@@ -71,8 +71,10 @@ async function createUser(req, res) {
         // if they are an admin, or they are creating an account with the currently logged in user
         // or this is a test
         const userPrivs = await getUserPrivs(req);
+        const userSub = req.oidc.user.sub;
 
-        if (userPrivs.sub == req.body.userSub ||
+
+        if (userSub == req.body.userSub ||
             isRegionAdmin(userPrivs, req.body.regionId) ||
             process.env.ENV_DEV) {
 
