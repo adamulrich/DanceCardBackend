@@ -1,6 +1,6 @@
 const ObjectId = require("mongodb").ObjectId;
 const { default: mongoose } = require('mongoose');
-const { setHeaders } = require('./index');
+const { setHeaders, isRegionAdmin } = require('./utils');
 const schedule = require('../models/dance').danceModel;
 const danceId = require('../models/dance').getNewDanceId;
 

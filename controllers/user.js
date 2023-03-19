@@ -1,8 +1,7 @@
 const ObjectId = require('mongodb').ObjectId;
 const { default: mongoose } = require('mongoose');
 const { getUserPrivs } = require('../models/user');
-const { setHeaders } = require('./index');
-
+const { setHeaders, isRegionAdmin } = require('./utils');
 const contentText = 'text/plain';
 const contentJson = 'application/json';
 
@@ -30,9 +29,10 @@ async function getUser(req, res) {
 
             //get privs and check to see if they are an admin, or the user, or this is a test
             const userPrivs = await getUserPrivs(req);
-
+            console.log(userPrivs.sub);
+            console.log(result.userSub);
             if ( userPrivs.sub == result.userSub ||
-                (userPrivs.regionAdmin && result.regionId == userPrivs.regionId) ||
+                isRegionAdmin(userPrivs, req.body.regionId) || 
                 process.env.ENV_DEV) {
 
                     //return data
@@ -73,7 +73,7 @@ async function createUser(req, res) {
         const userPrivs = await getUserPrivs(req);
 
         if (userPrivs.sub == req.body.userSub ||
-            (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+            isRegionAdmin(userPrivs, req.body.regionId) ||
             process.env.ENV_DEV) {
 
             //get new user data from request object
@@ -120,7 +120,7 @@ async function updateUser(req, res) {
         const userPrivs = await getUserPrivs(req);
 
         if (userPrivs.sub == req.body.userSub ||
-            (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+            isRegionAdmin(userPrivs, req.body.regionId) ||
             process.env.ENV_DEV) {
 
             //get new user data from request object
@@ -188,7 +188,7 @@ async function deleteUser(req, res) {
         const userPrivs = await getUserPrivs(req);
         
         if (userPrivs.sub == req.body.userSub ||
-            (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+            isRegionAdmin(userPrivs, req.body.regionId) ||
             process.env.ENV_DEV) {
 
             let result = {};

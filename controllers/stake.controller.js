@@ -2,7 +2,7 @@ const { default: mongoose } = require('mongoose');
 const Stake = require("../models/stake").stakeModel;
 const contentText = 'text/plain';
 const contentJson = 'application/json';
-const { setHeaders } = require('./index');
+const { setHeaders, isRegionAdmin } = require('./utils');
 
 const { getUserPrivs } = require('../models/user');
 
@@ -10,8 +10,7 @@ const { getUserPrivs } = require('../models/user');
 const add_one = async (req, res) => {
   try {
     const userPrivs = await getUserPrivs(req);
-    if (
-      (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+    if ( isRegionAdmin(userPrivs, req.body.regionId) ||
       process.env.ENV_DEV) {
       const { id } = req.params;
       const stake = Stake(req.body);
@@ -89,8 +88,7 @@ const getSingle = async (req, res) => {
 const delete_one = async (req, res) => {
   try {
     const userPrivs = await getUserPrivs(req);
-    if (
-      (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+   if ( isRegionAdmin(userPrivs, req.body.regionId) ||
       process.env.ENV_DEV) {
       const { id } = req.params;
       await Stake
@@ -117,8 +115,7 @@ const delete_one = async (req, res) => {
 const update_one = async (req, res) => {
   try {
     const userPrivs = await getUserPrivs(req);
-    if (
-      (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+    if ( isRegionAdmin(userPrivs, req.body.regionId) ||
       process.env.ENV_DEV) {
       const { id } = req.params;
       const updatedStake = req.body;

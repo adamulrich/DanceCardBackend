@@ -1,6 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const Region = require("../models/region.js").regionModel;
 const user = require('../models/user');
+const { setHeaders, isRegionAdmin } = require('./utils');
 
 
 // get public region
@@ -35,7 +36,7 @@ const createRegion = async (req, res, next) => {
     try {
         const userPrivs = await user.getUserPrivs(req);
 
-        if ( (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+        if ( isRegionAdmin(userPrivs, req.body.regionId) ||
             process.env.ENV_DEV) {
                 const region = new Region(req.body);
                 try {
@@ -61,7 +62,7 @@ const updateRegion = async (req, res) => {
     try {
         // check if they are an admin and if they match region id
         const userPrivs = await user.getUserPrivs(req);
-        if ( (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+        if ( isRegionAdmin(userPrivs, req.body.regionId) ||
             process.env.ENV_DEV) {
 
                 try {
@@ -103,7 +104,7 @@ const deleteRegion = async (req, res) => {
     try {
         // check if they are an admin and iff they match region id
         const userPrivs = await user.getUserPrivs(req);
-        if ( (userPrivs.regionAdmin && req.body.regionId == userPrivs.regionId) ||
+        if ( isRegionAdmin(userPrivs, req.body.regionId) ||
             process.env.ENV_DEV) {
                 try {
 

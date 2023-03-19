@@ -17,6 +17,21 @@ const wardSchema = new mongoose.Schema(
 
     });
 
+    wardSchema.virtual('region', {
+        ref: 'region',
+        localField: 'regionId',
+        foreignField: 'regionId',
+        justOne: true // for many-to-1 relationships
+    });
+    
+    wardSchema.virtual('stake', {
+        ref: 'stake',
+        localField: 'stakeId',
+        foreignField: 'stakeId',
+        justOne: true // for many-to-1 relationships
+    });
+    
+
 const wardExample = {
     name: "Pine Tree Ward",
     wardId: 1,
