@@ -1,5 +1,9 @@
 const router = require('express').Router();
 const user = require('../controllers/user');
+const { requiresAuth } = require('express-openid-connect');
+const { jwtCheck } = require('../controllers/utils');
+
+
 
 router.get('/user/:email', async (req, res) => {
     if (req.oidc.isAuthenticated() || process.env.ENV_DEV) {
@@ -19,8 +23,12 @@ router.get('/user/:email', async (req, res) => {
 }
 )
 
-router.post('/user', (req, res) => {
-    if (req.oidc.isAuthenticated() || process.env.ENV_DEV) {
+router.post('/user', jwtCheck, async (req, res) => {
+    console.log(req.headers);
+    console.log(req.oidc);
+    req.oidc.accessToken = reg.headers.authorization
+    const authStatus = await req.oidc.isAuthenticated();
+    if (authStatus || process.env.ENV_DEV) {
         // #swagger.summary = 'add a user to the db'
         // #swagger.description = 'add a user to the db'
         /* #swagger.responses[201] = {
@@ -41,7 +49,7 @@ router.post('/user', (req, res) => {
 });
 
 
-router.put("/user/:email", (req, res) => {
+router.put("/user/:email", async (req, res) => {
     if (req.oidc.isAuthenticated() || process.env.ENV_DEV)
     {
     // #swagger.summary = 'replaces a user in the db based on ID'
@@ -63,7 +71,7 @@ router.put("/user/:email", (req, res) => {
     }
 });
 
-router.delete("/user/:email", (req, res) => {
+router.delete("/user/:email", requiresAuth(), async (req, res) => {
     if (req.oidc.isAuthenticated() || process.env.ENV_DEV) {
     // #swagger.summary = 'deletes a user from the db based on email.'
     /* #swagger.responses[200] = {
