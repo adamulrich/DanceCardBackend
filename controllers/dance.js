@@ -68,7 +68,7 @@ const createDance = async (req, res) => {
             res.status(500).send('Dance not created');
         }
         } else {
-            res.status(401).sent("You are not Permitted");
+            res.status(401).send("You are not Permitted");
         }
 };
 
@@ -105,7 +105,7 @@ const updateDance = async (req, res) => {
         } catch (error) {
         res.status(500).send(`${error}`);
         }} else {
-            res.status(401).sent("You are not Permitted");
+            res.status(401).send("You are not Permitted");
         }
 }
 
@@ -136,7 +136,7 @@ const deleteDance = async (req, res) => {
             modifyCount = 200
         }
     }else {
-        res.status(401).sent("You are not Permitted");
+        res.status(401).send("You are not Permitted");
     }
 }
 
