@@ -71,7 +71,12 @@ async function createUser(req, res) {
         // if they are an admin, or they are creating an account with the currently logged in user
         // or this is a test
         const userPrivs = await getUserPrivs(req);
-        const userSub = req.oidc.user.sub;
+        let userSub = '';
+        try {
+            userSub = req.oidc.user.sub;
+        } catch (error) {
+            
+        }        
 
 
         if (userSub == req.body.userSub ||
