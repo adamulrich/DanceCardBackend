@@ -24,7 +24,7 @@ const danceSchema = new mongoose.Schema(
     });
 
 const danceExample = {
-    regionId: "1",
+    regionId: 1,
     stakeHost: "Kent Washington",
     theme: "Throwback 90s",
     location: "999 West Over Street, Kent, Washington",

@@ -2,7 +2,7 @@ const router = require('express').Router();
 const ctrSchedule = require('../controllers/dance');
 
 //Get Schedule
-router.get('/schedule/:regionId',  
+router.get('/schedule/region/:regionId',  
     // #swagger.summary = 'This is where you will find the dance schedules. '
     // #swagger.description = 'Dances, where, when, and theme'
     /* #swagger.responses[] = {
@@ -11,6 +11,17 @@ router.get('/schedule/:regionId',
     }
     */
 ctrSchedule.getAllDances);
+
+//Get Schedule for one dance
+router.get('/schedule/:id',  
+    // #swagger.summary = 'This is where you will find the dance schedules. '
+    // #swagger.description = ''
+    /* #swagger.responses[] = {
+        description: 'Single Dance',
+        schema: { $ref: '#/definitions/dance'}
+    }
+    */
+ctrSchedule.getDance);
 
 // Get Future Schedule 
 router.get('/schedule/future/:regionId', 

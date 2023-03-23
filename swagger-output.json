@@ -722,7 +722,7 @@
         }
       }
     },
-    "/schedule/{regionId}": {
+    "/schedule/region/{regionId}": {
       "get": {
         "summary": "This is where you will find the dance schedules. ",
         "description": "Dances, where, when, and theme",
@@ -752,6 +752,99 @@
                 "name": "main"
               }
             }
+          }
+        }
+      }
+    },
+    "/schedule/{id}": {
+      "get": {
+        "summary": "This is where you will find the dance schedules. ",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "": {
+            "description": "Single Dance",
+            "schema": {
+              "$ref": "#/definitions/dance"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update changes to dance",
+        "description": "Changes to dance are...",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Schedule"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Change a dance",
+            "schema": {
+              "$ref": "#/definitions/dance"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a dance schedule based on ID.",
+        "description": "Deletes a dance schedule from the db based on ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Schedule"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -808,63 +901,14 @@
           "201": {
             "description": "OK"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "404": {
             "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/schedule/{id}": {
-      "put": {
-        "summary": "Update changes to dance",
-        "description": "Changes to dance are...",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "Schedule"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Change a dance",
-            "schema": {
-              "$ref": "#/definitions/dance"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "OK"
-          },
-          "422": {
-            "description": "Unprocessable Entity"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Deletes a dance schedule based on ID.",
-        "description": "Deletes a dance schedule from the db based on ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "Schedule"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }
