@@ -14,7 +14,9 @@ async function getAllDances(req, res) {
     try {
         // getting dance schedule 
         const result = await schedule.find({"regionId": regionId});
-        console.log(result);
+        if (result == null) {
+            return res.status(404).send('Not found.');
+        }
         setHeaders(res, "application/json");
         res.status(200).json(result);
         
@@ -24,6 +26,26 @@ async function getAllDances(req, res) {
         res.status(500).send(error);
     }
 };
+
+// GET single DANCE
+async function getDance(req, res) {
+    const id = req.params.id;
+    // console.log(regionId);
+    try {
+        // getting dance schedule 
+        const result = await schedule.findOne({"id": id});
+        if (result == null) {
+            return res.status(404).send('Not found.');
+        }
+        setHeaders(res, "application/json");
+        res.status(200).json(result);
+        
+    } catch (error) {
+        setHeaders(res, 'text/plain');
+        res.status(500).send(error);
+    }
+};
+
 
 // GET FUTURE DANCES
 const getAllFutureDances = async (req, res) => {
@@ -150,4 +172,4 @@ const deleteDance = async (req, res) => {
 
 
 
-module.exports = { getAllDances, getAllFutureDances,  createDance, updateDance, deleteDance, setHeaders };
+module.exports = { getAllDances, getAllFutureDances,  createDance, updateDance, deleteDance, setHeaders, getDance };
