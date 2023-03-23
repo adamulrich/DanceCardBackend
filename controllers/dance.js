@@ -112,31 +112,39 @@ const updateDance = async (req, res) => {
 // DELETE A DANCE 
 const deleteDance = async (req, res) => {
     const userPrivs = await user.getUserPrivs(req);
-    if (isRegionAdmin(userPrivs, req.body.regionId) || process.env.ENV_DEV) {
-    try {
-        const {id} = req.params;
-        let removeDance = {};
-        try {
-            removeDance = await schedule.deleteOne({'id': id});
-            console.log(danceId);
-            return res.status(200).json(removeDance);
 
-        } catch (error) {
-            setHeaders(res, 'text/plain');
-            res.status(400).json(error);
+    try {
+        const { id } = req.params;
+        const dance = await schedule.findOne({ 'id': id });
+        if (dance == null) {
+            return res.status(404).send('Not found.');
         }
+        if (isRegionAdmin(userPrivs, dance.regionId) || process.env.ENV_DEV) {
+
+            let removeDance = {};
+            try {
+                removeDance = await schedule.deleteOne({'id': id});
+                console.log(danceId);
+                let statusCode = 0;
+                if (removeDance.deletedCount == 0) {
+                    statusCode = 404
+                } else {
+                    statusCode = 200
+                }        
+                return res.status(statusCode).json(removeDance);
+
+            } catch (error) {
+                setHeaders(res, 'text/plain');
+                res.status(400).json(error);
+            }
+
+        }else {
+            res.status(401).send("You are not Permitted");
+        }
+    
     } catch (error) {
         setHeaders(res, 'text/plain');
-        res.status(500).send("Dance Not Deleted");
-    }
-    let modifyCount = 0;
-        if (removeDance.deletedCount == 0) {
-            modifyCount = 404
-        } else {
-            modifyCount = 200
-        }
-    }else {
-        res.status(401).send("You are not Permitted");
+        res.status(500).send(`Dance Not Deleted. ${error}`);
     }
 }
 

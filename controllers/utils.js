@@ -9,8 +9,7 @@ function setHeaders(res, contentType) {
 }
 
 function isRegionAdmin(userPrivs, regionId) {
-    return (userPrivs.isRegionAdmin && userPrivs.regionId == regionId)
+    return (userPrivs.regionAdmin && userPrivs.regionId == regionId)
 }
 
 module.exports = {setHeaders, isRegionAdmin}
-
