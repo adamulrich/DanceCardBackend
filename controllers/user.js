@@ -1,7 +1,6 @@
 const ObjectId = require('mongodb').ObjectId;
 const { default: mongoose } = require('mongoose');
-const { getUserPrivs } = require('../models/user');
-const { setHeaders, isRegionAdmin } = require('./utils');
+const { setHeaders } = require('./utils');
 const contentText = 'text/plain';
 const contentJson = 'application/json';
 
@@ -27,13 +26,6 @@ async function getUser(req, res) {
             res.status(404).send(result);
         } else {
 
-            //get privs and check to see if they are an admin, or the user, or this is a test
-            const userPrivs = await getUserPrivs(req);
-            console.log(userPrivs.sub);
-            console.log(result.userSub);
-            if ( userPrivs.sub == result.userSub ||
-                isRegionAdmin(userPrivs, req.body.regionId) || 
-                process.env.ENV_DEV) {
 
                     //return data
                 setHeaders(res, contentJson);
@@ -53,9 +45,6 @@ async function getUser(req, res) {
                 returnUser.wardId = result.wardId;
                 returnUser.wardName = result.ward.name;
                 res.status(200).json(returnUser);
-            } else {
-                res.status(401).send("Incorrect permissions.");
-            }
         }
 
     } catch (error) {
@@ -68,21 +57,7 @@ async function getUser(req, res) {
 async function createUser(req, res) {
     try {
 
-        // if they are an admin, or they are creating an account with the currently logged in user
-        // or this is a test
-        const userPrivs = await getUserPrivs(req);
-        let userSub = '';
-        try {
-            userSub = req.oidc.user.sub;
-        } catch (error) {
-            
-        }     
-
-
-        if (userSub == req.body.userSub ||
-            isRegionAdmin(userPrivs, req.body.regionId) ||
-            process.env.ENV_DEV) {
-
+        
             //get new user data from request object
             try {
                 const newUser = new user(req.body);
@@ -108,11 +83,6 @@ async function createUser(req, res) {
                 res.status(400).send(`${error}`);
                 return;
             }
-        // failed authorization for user
-        } else {
-            setHeaders(res, contentText);
-            res.status(403).send("Incorrect permissions.");    
-        }
     } catch (error) {
         res.status(500).send(`${error}`);
     }
@@ -122,13 +92,7 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
     try {
 
-        // if they are an admin, or they are creating an account with the currently logged in user
-        // or this is a test
-        const userPrivs = await getUserPrivs(req);
-
-        if (userPrivs.sub == req.body.userSub ||
-            isRegionAdmin(userPrivs, req.body.regionId) ||
-            process.env.ENV_DEV) {
+        
 
             //get new user data from request object
             try {
@@ -175,11 +139,6 @@ async function updateUser(req, res) {
                 res.status(400).send(`${error}`);
                 return;
             }
-        // failed authorization for user
-        } else {
-            setHeaders(res, contentText);
-            res.status(403).send("Incorrect permissions.");    
-        }
     } catch (error) {
         res.status(500).send(`${error}`);
     }
@@ -191,13 +150,6 @@ async function deleteUser(req, res) {
     const userEmail = req.params.email;
 
     try {
-        //get privs and check to see if they are an admin, or the user, or this is a test
-        const userPrivs = await getUserPrivs(req);
-        
-        if (userPrivs.sub == req.body.userSub ||
-            isRegionAdmin(userPrivs, req.body.regionId) ||
-            process.env.ENV_DEV) {
-
             let result = {};
             
             try {
@@ -219,11 +171,6 @@ async function deleteUser(req, res) {
             setHeaders(res, contentText);
             res.status(statusCode).send(result);
                     // failed authorization for user
-        } else {
-            setHeaders(res, contentText);
-            res.status(403).send("Incorrect permissions.");    
-        }
-
 
     }
     catch (error) {

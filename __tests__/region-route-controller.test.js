@@ -28,6 +28,7 @@ describe("Region route test", function() {
     test("create/read/update/delete region", async () => {
         // change region name
         testRegion.name = "Test Idaho";
+        testRegion.regionId = 1000;
 
         // create and save
         const resCorrect = await request(server)

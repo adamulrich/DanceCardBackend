@@ -3,8 +3,7 @@ const Ward = require("../models/ward").wardModel;
 const contentText = 'text/plain';
 const contentJson = 'application/json';
 const {getNewWardId} = require('../models/ward');
-const { getUserPrivs } = require('../models/user');
-const { setHeaders, isRegionAdmin } = require('./utils');
+const { setHeaders } = require('./utils');
 
 
 const getall = async (req, res) => {
@@ -75,11 +74,7 @@ const getSingle = async (req, res) => {
 
 const add_one = async (req, res) => {
   try {
-    const userPrivs = await getUserPrivs(req);
-    console.log(userPrivs);
-    console.log(req.body);
-    if ( isRegionAdmin(userPrivs, req.body.regionId) ||
-      process.env.ENV_DEV) {
+    
       const { id } = req.params;
       const ward = Ward(req.body);
       ward.wardId= await getNewWardId();
@@ -90,10 +85,6 @@ const add_one = async (req, res) => {
         .catch((error) => res.status(404).json({ error }));
 
       return;
-    } else {
-      setHeaders(res, contentText);
-      res.status(403).send("Incorrect permissions.");
-    }
 
   } catch (error) {
     //500 server error
@@ -103,9 +94,6 @@ const add_one = async (req, res) => {
 
 const update_one = async (req, res) => {
   try {
-    const userPrivs = await getUserPrivs(req);
-    if ( isRegionAdmin(userPrivs, req.body.regionId) ||
-      process.env.ENV_DEV) {
       const { id } = req.params;
       const updatedWard = req.body;
       Ward
@@ -116,10 +104,6 @@ const update_one = async (req, res) => {
         .catch((error) => res.status(404).json({ message: "Ward not updated" }));
 
       return;
-    } else {
-      setHeaders(res, contentText);
-      res.status(403).send("Incorrect permissions.");
-    }
 
   } catch (error) {
     //500 server error
@@ -130,9 +114,6 @@ const update_one = async (req, res) => {
 const delete_one = async (req, res) => {
   try {
     const { id, regionId } = req.params;
-    const userPrivs = await getUserPrivs(req);
-    if ( isRegionAdmin(userPrivs, regionId) ||
-      process.env.ENV_DEV) {
       
       let result = {};
             
@@ -157,10 +138,7 @@ const delete_one = async (req, res) => {
 
 
 
-    } else {
-      setHeaders(res, contentText);
-      res.status(403).send("Incorrect permissions.");
-    }
+    
 
   } catch (error) {
     //500 server error

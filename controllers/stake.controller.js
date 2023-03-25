@@ -2,16 +2,12 @@ const { default: mongoose } = require('mongoose');
 const Stake = require("../models/stake").stakeModel;
 const contentText = 'text/plain';
 const contentJson = 'application/json';
-const { setHeaders, isRegionAdmin } = require('./utils');
-
-const { getUserPrivs } = require('../models/user');
+const { setHeaders } = require('./utils');
 
 
 const add_one = async (req, res) => {
   try {
-    const userPrivs = await getUserPrivs(req);
-    if ( isRegionAdmin(userPrivs, req.body.regionId) ||
-      process.env.ENV_DEV) {
+    
       const { id } = req.params;
       const stake = Stake(req.body);
       stake.stakeId=getNewStakeId();
@@ -21,10 +17,6 @@ const add_one = async (req, res) => {
         .catch((error) => res.status(404).json({ message: "Stake not updated" }));
 
       return;
-    } else {
-      setHeaders(res, contentText);
-      res.status(403).send("Incorrect permissions.");
-    }
 
   } catch (error) {
     //500 server error
@@ -87,9 +79,6 @@ const getSingle = async (req, res) => {
 
 const delete_one = async (req, res) => {
   try {
-    const userPrivs = await getUserPrivs(req);
-   if ( isRegionAdmin(userPrivs, req.body.regionId) ||
-      process.env.ENV_DEV) {
       const { id } = req.params;
       await Stake
       .remove({ 'stakeId': id })
@@ -97,10 +86,6 @@ const delete_one = async (req, res) => {
       .catch((error) => res.status(404).json({ message: "Stake not deleted" }));
 
       return;
-    } else {
-      setHeaders(res, contentText);
-      res.status(403).send("Incorrect permissions.");
-    }
 
   } catch (error) {
     //500 server error
@@ -114,9 +99,6 @@ const delete_one = async (req, res) => {
 
 const update_one = async (req, res) => {
   try {
-    const userPrivs = await getUserPrivs(req);
-    if ( isRegionAdmin(userPrivs, req.body.regionId) ||
-      process.env.ENV_DEV) {
       const { id } = req.params;
       const updatedStake = req.body;
       Stake
@@ -127,10 +109,6 @@ const update_one = async (req, res) => {
         .catch((error) => res.status(404).json({ message: "Stake not updated" }));
 
       return;
-    } else {
-      setHeaders(res, contentText);
-      res.status(403).send("Incorrect permissions.");
-    }
 
   } catch (error) {
     //500 server error
@@ -138,6 +116,6 @@ const update_one = async (req, res) => {
   }
 };
 
-module.exports = { add_one, getall, getSingle, delete_one, update_one }
+module.exports = { add_one, getall, getSingle, getallbyregion, delete_one, update_one }
 
 

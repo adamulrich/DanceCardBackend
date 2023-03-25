@@ -90,33 +90,8 @@ const userReturnExample = {
     userSub: "github/1234567890"
 }
 
-async function getUserPrivs(req) {
-    let userPrivs = { regionId: 0, regionAdmin: false, sub: ''};
-    if (req.oidc.isAuthenticated()) {
-        userPrivs = await getPrivs(req.oidc.user.sub);
-        userPrivs.sub = req.oidc.user.sub;
-    }
 
-    return userPrivs;
-}
 
-async function getPrivs(userId) {
-    try {
-        const returnValue = {};
-        const userPrivs = await userModel.findOne({ userSub: userId });
-        if (userPrivs != null) {
-            returnValue.regionAdmin = userPrivs.regionAdmin;
-            returnValue.regionId = userPrivs.regionId;
-            return returnValue;
-        } else {
-            console.log("User not found.");
-            return false;
-        }
-    
-    } catch (error) {
-        console.log(`${error}`)        
-        return false;
-    }
-}
+
 userModel = mongoose.model("user", userSchema, 'user')
-module.exports = {userModel, userExample, userReturnExample, getUserPrivs}
+module.exports = {userModel, userExample, userReturnExample}

@@ -1,10 +1,9 @@
 const ObjectId = require("mongodb").ObjectId;
 const { default: mongoose } = require('mongoose');
-const { setHeaders, isRegionAdmin } = require('./utils');
+const { setHeaders } = require('./utils');
 const schedule = require('../models/dance').danceModel;
 const danceId = require('../models/dance').getNewDanceId;
 const user = require('../models/user');
-const { getUserPrivs } = require('../models/user');
 
 
 // GET DANCES
@@ -67,8 +66,6 @@ const getAllFutureDances = async (req, res) => {
 
 // CREATE DANCE
 const createDance = async (req, res) => {
-    const userPrivs = await user.getUserPrivs(req);
-    if (isRegionAdmin(userPrivs, req.body.regionId) || process.env.ENV_DEV) {
         try {
             const newDance = new schedule(req.body);
             const newDanceId = await danceId();
@@ -89,15 +86,10 @@ const createDance = async (req, res) => {
             setHeaders(res, "text/plain");
             res.status(500).send('Dance not created');
         }
-        } else {
-            res.status(401).send("You are not Permitted");
-        }
 };
 
 // UPDATE A DANCE 
 const updateDance = async (req, res) => {
-    const userPrivs = await user.getUserPrivs(req);
-    if (isRegionAdmin(userPrivs, req.body.regionId) || process.env.ENV_DEV) {
         try {
             const danceId = req.params.id;
             const dance = req.body;
@@ -126,22 +118,19 @@ const updateDance = async (req, res) => {
 
         } catch (error) {
         res.status(500).send(`${error}`);
-        }} else {
-            res.status(401).send("You are not Permitted");
         }
 }
 
 // DELETE A DANCE 
 const deleteDance = async (req, res) => {
-    const userPrivs = await user.getUserPrivs(req);
-
+    
     try {
         const { id } = req.params;
         const dance = await schedule.findOne({ 'id': id });
         if (dance == null) {
             return res.status(404).send('Not found.');
         }
-        if (isRegionAdmin(userPrivs, dance.regionId) || process.env.ENV_DEV) {
+    
 
             let removeDance = {};
             try {
@@ -160,9 +149,6 @@ const deleteDance = async (req, res) => {
                 res.status(400).json(error);
             }
 
-        }else {
-            res.status(401).send("You are not Permitted");
-        }
     
     } catch (error) {
         setHeaders(res, 'text/plain');
