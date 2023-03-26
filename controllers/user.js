@@ -75,7 +75,11 @@ async function createUser(req, res) {
             
                 // success
                 setHeaders(res, contentText);
-                res.status(201).send(`New User: ${newUser['name']}, email: ${newUser['email']}`);
+                res.status(201).send(
+                    {   
+                        newUser: newUser['name'],
+                        email: newUser['email']
+                    });
 
             // catch unknown errors
             } catch (error) {
