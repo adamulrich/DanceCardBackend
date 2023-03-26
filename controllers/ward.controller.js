@@ -80,7 +80,7 @@ const add_one = async (req, res) => {
     console.log(req.body);
     if ( isRegionAdmin(userPrivs, req.body.regionId) ||
       process.env.ENV_DEV) {
-      const { id } = req.params;
+      
       const ward = Ward(req.body);
       ward.wardId= await getNewWardId();
       
@@ -168,11 +168,4 @@ const delete_one = async (req, res) => {
   }
 };
 
-
-
-
-
-
 module.exports = { getall, getSingle, add_one, update_one, delete_one, getAllByStake }
-
-
