@@ -194,36 +194,42 @@ async function deleteUser(req, res) {
         //get privs and check to see if they are an admin, or the user, or this is a test
         const userPrivs = await getUserPrivs(req);
         
-        if (userPrivs.sub == req.body.userSub ||
-            isRegionAdmin(userPrivs, req.body.regionId) ||
-            process.env.ENV_DEV) {
-
-            let result = {};
+        const userToDelete = await user.findOne({ 'email': userEmail });
+        if (userToDelete) {
             
-            try {
-                //get user data from model
-                result = await user.deleteOne({ email: {$eq: userEmail}});
-                console.log(result);
-            } catch (error) {
+            if (userPrivs.sub == userToDelete.userSub ||
+                isRegionAdmin(userPrivs, userToDelete.regionId) ||
+                process.env.ENV_DEV) {
+
+                let result = {};
+                
+                try {
+                    //get user data from model
+                    result = await user.deleteOne({ email: { $eq: userEmail } });
+                    console.log(result);
+                } catch (error) {
+                    setHeaders(res, contentText);
+                    res.status(422).send(`Bad data. ${error}`);
+                    return;
+                }
+                // if deletedCount is 0 set the status code to 404
+                let statusCode = 0;
+                if (result.deletedCount == 0) {
+                    statusCode = 404
+                } else {
+                    statusCode = 200
+                }
                 setHeaders(res, contentText);
-                res.status(422).send(`Bad data. ${error}`);
-                return;
-            }
-            // if deletedCount is 0 set the status code to 404
-            let statusCode = 0;
-            if (result.deletedCount == 0) {
-                statusCode = 404
+                res.status(statusCode).send(result);
+                // failed authorization for user
             } else {
-                statusCode = 200
+                setHeaders(res, contentText);
+                res.status(403).send("Incorrect permissions.");
             }
-            setHeaders(res, contentText);
-            res.status(statusCode).send(result);
-                    // failed authorization for user
         } else {
             setHeaders(res, contentText);
-            res.status(403).send("Incorrect permissions.");    
+            res.status(404).send("Not a valid user email.");
         }
-
 
     }
     catch (error) {
