@@ -32,7 +32,7 @@ async function getUser(req, res) {
             console.log(userPrivs.sub);
             console.log(result.userSub);
             if ( userPrivs.sub == result.userSub ||
-                isRegionAdmin(userPrivs, req.body.regionId) || 
+                isRegionAdmin(userPrivs, result.regionId) || 
                 process.env.ENV_DEV) {
 
                     //return data

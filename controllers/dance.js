@@ -170,6 +170,4 @@ const deleteDance = async (req, res) => {
     }
 }
 
-
-
 module.exports = { getAllDances, getAllFutureDances,  createDance, updateDance, deleteDance, setHeaders, getDance };
