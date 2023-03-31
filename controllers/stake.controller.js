@@ -156,4 +156,4 @@ const update_one = async (req, res) => {
   }
 };
 
-module.exports = { add_one, getall, getSingle, delete_one, update_one }
+module.exports = { add_one, getallbyregion, getSingle, delete_one, update_one }
