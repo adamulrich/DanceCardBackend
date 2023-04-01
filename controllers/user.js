@@ -44,6 +44,8 @@ async function getUser(req, res) {
                 returnUser.stakeName = result.stake.name;
                 returnUser.wardId = result.wardId;
                 returnUser.wardName = result.ward.name;
+                returnUser.userSub = result.userSub;
+                
                 res.status(200).json(returnUser);
         }
 
