@@ -1,6 +1,8 @@
 const { default: mongoose } = require('mongoose');
 const { doesRegionIdExist } = require('../models/region.js');
 const Region = require("../models/region.js").regionModel;
+const Stake = require('../models/stake.js').stakeModel;
+const Ward = require('../models/ward.js').wardModel;
 const user = require('../models/user');
 const { setHeaders } = require('./utils');
 
@@ -33,6 +35,39 @@ const getRegion = async (req, res) => {
         res.status(500).send('Region Not Found');
     }
 }
+
+const getAllStakesInRegion = async (req, res) => {
+    const regionId = req.params.regionId;
+    try {
+        let result = await Stake.find({ "regionId": regionId });
+        if (result == null) {
+            return res.status(404).send("Not found.");
+        }
+        res.setHeader("Content-Type", "application/json");
+        res.status(200).json(result);
+    } catch {
+        res.setHeader("Content-Type", "text/plain");
+        res.status(500).send('Region Not Found');
+    }
+    
+}
+
+const getAllWardsInRegion = async (req, res) => {
+    const regionId = req.params.regionId;
+    try {
+        let result = await Ward.find({ "regionId": regionId });
+        if (result == null) {
+            return res.status(404).send("Not found.");
+        }
+        res.setHeader("Content-Type", "application/json");
+        res.status(200).json(result);
+    } catch {
+        res.setHeader("Content-Type", "text/plain");
+        res.status(500).send('Region Not Found');
+    }
+    
+}
+
 
 // create region - private
 const createRegion = async (req, res, next) => {
@@ -132,5 +167,4 @@ const deleteRegion = async (req, res) => {
         res.status(500).send('Region Not Deleted');
     }
 }
-module.exports = {getRegions, getRegion, createRegion, updateRegion, deleteRegion}
-
+module.exports = {getRegions, getRegion, createRegion, updateRegion, deleteRegion, getAllStakesInRegion, getAllWardsInRegion}
